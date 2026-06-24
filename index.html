@@ -71,6 +71,9 @@
       background: #F1F5F9;
       z-index: 1;
       overflow: hidden;
+      /* Prevent iframe scroll */
+      overflow-y: hidden;
+      overflow-x: hidden;
     }
 
     /* ============================================================
@@ -83,6 +86,11 @@
       }
       body {
         height: -webkit-fill-available;
+      }
+      iframe {
+        height: -webkit-fill-available;
+        min-height: -webkit-fill-available;
+        max-height: -webkit-fill-available;
       }
     }
 
@@ -104,6 +112,25 @@
         min-height: 100vh;
         min-height: 100dvh;
         max-height: 100vh;
+        max-height: 100dvh;
+      }
+    }
+
+    /* ============================================================
+       PORTRAIT HP - FULL FIT
+    ============================================================ */
+    @media (orientation: portrait) and (max-width: 480px) {
+      html, body, iframe {
+        min-height: 100vh;
+        min-height: -webkit-fill-available;
+        min-height: 100dvh;
+        max-height: 100vh;
+        max-height: -webkit-fill-available;
+        max-height: 100dvh;
+      }
+      iframe {
+        height: 100dvh;
+        min-height: 100dvh;
         max-height: 100dvh;
       }
     }
@@ -165,9 +192,9 @@
     ============================================================ */
     @media (max-width: 480px) and (orientation: portrait) {
       .keyboard-open iframe {
-        height: 100vh;
-        min-height: 100vh;
-        max-height: 100vh;
+        height: 100vh !important;
+        min-height: 100vh !important;
+        max-height: 100vh !important;
       }
     }
   </style>
@@ -186,7 +213,8 @@
     src="https://script.google.com/macros/s/AKfycbxD-gkBbvrp8HoLAZxG_5IsKi2oUu3bfZkvs4R1aglzGiuobJqwpvoWEwHQCTTZZeP9/exec"
     allowfullscreen="true"
     loading="lazy"
-    scrolling="no">
+    scrolling="no"
+    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals">
   </iframe>
 
   <script>
@@ -203,6 +231,7 @@
         }, 300);
       });
 
+      // Fallback: hilangkan loading setelah 5 detik
       setTimeout(function() {
         loadingOverlay.classList.add('hidden');
       }, 5000);
@@ -226,20 +255,26 @@
       }
     }
 
-    // Fullscreen saat tap/klik
+    // Fullscreen saat tap/klik (user gesture)
+    var fullscreenAttempted = false;
+
     document.addEventListener('click', function() {
+      if (fullscreenAttempted) return;
       var iframeEl = document.getElementById('appIframe');
       if (iframeEl && !document.fullscreenElement && !document.webkitFullscreenElement) {
+        fullscreenAttempted = true;
         requestFullscreen(iframeEl);
       }
-    }, { once: true });
+    });
 
     document.addEventListener('touchstart', function() {
+      if (fullscreenAttempted) return;
       var iframeEl = document.getElementById('appIframe');
       if (iframeEl && !document.fullscreenElement && !document.webkitFullscreenElement) {
+        fullscreenAttempted = true;
         requestFullscreen(iframeEl);
       }
-    }, { once: true });
+    });
 
     // ============================================================
     // COBA FULLSCREEN SAAT LOAD (MUNGKIN DIBLOKIR BROWSER)
@@ -248,8 +283,10 @@
       var iframeEl = document.getElementById('appIframe');
       if (iframeEl && document.fullscreenEnabled) {
         setTimeout(function() {
-          requestFullscreen(iframeEl);
-        }, 500);
+          if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+            requestFullscreen(iframeEl);
+          }
+        }, 800);
       }
     });
 
@@ -258,19 +295,28 @@
     // ============================================================
     if ('visualViewport' in window) {
       var initialHeight = window.visualViewport.height;
+      var isKeyboardOpen = false;
+
       window.visualViewport.addEventListener('resize', function() {
         var currentHeight = window.visualViewport.height;
         var iframeEl = document.getElementById('appIframe');
-        if (currentHeight < initialHeight) {
-          // Keyboard terbuka - iframe tetap full
-          iframeEl.style.height = '100vh';
-          iframeEl.style.minHeight = '100vh';
-          iframeEl.style.maxHeight = '100vh';
-        } else {
+        
+        if (currentHeight < initialHeight * 0.7) {
+          // Keyboard terbuka
+          isKeyboardOpen = true;
+          if (iframeEl) {
+            iframeEl.style.height = '100vh';
+            iframeEl.style.minHeight = '100vh';
+            iframeEl.style.maxHeight = '100vh';
+          }
+        } else if (isKeyboardOpen && currentHeight >= initialHeight * 0.85) {
           // Keyboard tertutup
-          iframeEl.style.height = '';
-          iframeEl.style.minHeight = '';
-          iframeEl.style.maxHeight = '';
+          isKeyboardOpen = false;
+          if (iframeEl) {
+            iframeEl.style.height = '';
+            iframeEl.style.minHeight = '';
+            iframeEl.style.maxHeight = '';
+          }
         }
       });
     }
@@ -286,8 +332,40 @@
           iframeEl.style.minHeight = '100vh';
           iframeEl.style.maxHeight = '100vh';
         }
-      }, 300);
+        // Reset fullscreen attempt on orientation change
+        fullscreenAttempted = false;
+      }, 400);
     });
+
+    // ============================================================
+    // RESIZE WINDOW - REFRESH HEIGHT
+    // ============================================================
+    window.addEventListener('resize', function() {
+      var iframeEl = document.getElementById('appIframe');
+      if (iframeEl && !isKeyboardOpen) {
+        iframeEl.style.height = '100%';
+        iframeEl.style.minHeight = '100vh';
+        iframeEl.style.maxHeight = '100vh';
+      }
+    });
+
+    // ============================================================
+    // PREVENT IFRAME SCROLL
+    // ============================================================
+    if (iframe) {
+      iframe.addEventListener('load', function() {
+        try {
+          // Prevent scrolling inside iframe
+          var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+          if (iframeDoc) {
+            iframeDoc.body.style.overflow = 'hidden';
+            iframeDoc.documentElement.style.overflow = 'hidden';
+          }
+        } catch (e) {
+          // Cross-origin, ignore
+        }
+      });
+    }
   </script>
 
 </body>
