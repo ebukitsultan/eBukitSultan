@@ -21,6 +21,11 @@
       padding: 0 !important;
       overflow: hidden !important;
       background: #F1F5F9 !important;
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
     }
 
     body {
@@ -190,14 +195,8 @@
     }
 
     /* ============================================================
-       TAMBAHAN UNTUK SINKRONISASI DENGAN BACKEND
+       DESKTOP MODE - TETAP RAPI
     ============================================================ */
-    /* Pastikan iframe tidak bisa di-scroll horizontal */
-    iframe {
-      overflow: hidden !important;
-    }
-
-    /* Desktop mode - tetap rapi */
     @media (min-width: 769px) {
       body {
         background: #E8ECF1 !important;
@@ -217,13 +216,26 @@
       }
     }
 
-    /* Safe area untuk iPhone notch */
+    /* ============================================================
+       SAFE AREA UNTUK IPHONE NOTCH
+    ============================================================ */
     @supports (padding: max(0px)) {
       body {
         padding-left: max(12px, env(safe-area-inset-left)) !important;
         padding-right: max(12px, env(safe-area-inset-right)) !important;
         padding-top: max(12px, env(safe-area-inset-top)) !important;
         padding-bottom: max(12px, env(safe-area-inset-bottom)) !important;
+      }
+    }
+
+    /* ============================================================
+       KEYBOARD OPEN - ADJUST IFRAME (CHROME HP)
+    ============================================================ */
+    @media (max-width: 480px) and (orientation: portrait) {
+      .keyboard-open iframe {
+        height: 100vh !important;
+        min-height: 100vh !important;
+        max-height: 100vh !important;
       }
     }
   </style>
@@ -239,7 +251,7 @@
   <!-- IFRAME APLIKASI -->
   <iframe 
     id="appIframe"
-    src="https://script.google.com/macros/s/AKfycbzQbsBK-wQSfTAKc2E-LCQbtJu1GGTPts2r8VuLldc3UnZnihnFQD2NMmb9XHJ9b9jX/exec"
+    src="https://script.google.com/macros/s/AKfycbwkG71ljzmJrzeQR4u6A_45TZLV4UjjkUGkQszYj99NtiSGh_Kx-GY7uZejDLnHGnIF/exec"
     allowfullscreen="true"
     loading="lazy"
     scrolling="no"
@@ -298,7 +310,7 @@
         fullscreenAttempted = true;
         requestFullscreen(iframeEl);
       }
-    }, { once: true });
+    });
 
     document.addEventListener('touchstart', function() {
       if (fullscreenAttempted) return;
@@ -307,7 +319,7 @@
         fullscreenAttempted = true;
         requestFullscreen(iframeEl);
       }
-    }, { once: true });
+    });
 
     // ============================================================
     // COBA FULLSCREEN SAAT LOAD
