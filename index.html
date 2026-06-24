@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
   <title>eBukitSultan</title>
   <style>
     /* ============================================================
@@ -29,6 +29,9 @@
       min-height: 100vh;
       min-height: -webkit-fill-available;
       min-height: 100dvh;
+      max-height: 100vh;
+      max-height: -webkit-fill-available;
+      max-height: 100dvh;
       margin: 0;
       padding: 0;
       overflow: hidden;
@@ -52,6 +55,9 @@
       min-height: 100vh;
       min-height: -webkit-fill-available;
       min-height: 100dvh;
+      max-height: 100vh;
+      max-height: -webkit-fill-available;
+      max-height: 100dvh;
       max-width: 100vw;
       border: none;
       margin: 0;
@@ -73,6 +79,7 @@
     @supports (-webkit-touch-callout: none) {
       html, body, iframe {
         min-height: -webkit-fill-available;
+        max-height: -webkit-fill-available;
       }
       body {
         height: -webkit-fill-available;
@@ -85,6 +92,7 @@
     @-moz-document url-prefix() {
       html, body, iframe {
         min-height: 100vh;
+        max-height: 100vh;
       }
     }
 
@@ -95,6 +103,8 @@
       html, body, iframe {
         min-height: 100vh;
         min-height: 100dvh;
+        max-height: 100vh;
+        max-height: 100dvh;
       }
     }
 
@@ -149,6 +159,17 @@
       color: #475569;
       letter-spacing: 0.5px;
     }
+
+    /* ============================================================
+       KEYBOARD OPEN - ADJUST HEIGHT (CHROME HP)
+    ============================================================ */
+    @media (max-width: 480px) and (orientation: portrait) {
+      .keyboard-open iframe {
+        height: 100vh;
+        min-height: 100vh;
+        max-height: 100vh;
+      }
+    }
   </style>
 </head>
 <body>
@@ -164,7 +185,8 @@
     id="appIframe"
     src="https://script.google.com/macros/s/AKfycbzHtg6IpiyDxMHT6fNZA893LP1K4i966JQ4iCZ1r0cVz_wpx-xSYtSKjfN3Yo0fYbef/exec"
     allowfullscreen="true"
-    loading="lazy">
+    loading="lazy"
+    scrolling="no">
   </iframe>
 
   <script>
@@ -175,34 +197,47 @@
     var loadingOverlay = document.getElementById('loadingOverlay');
 
     if (iframe) {
-      // Saat iframe selesai load, hilangkan loading
       iframe.addEventListener('load', function() {
         setTimeout(function() {
           loadingOverlay.classList.add('hidden');
         }, 300);
       });
 
-      // Fallback: jika iframe terlalu lama, hilangkan loading setelah 5 detik
       setTimeout(function() {
         loadingOverlay.classList.add('hidden');
       }, 5000);
     }
 
     // ============================================================
-    // FULLSCREEN - HANYA SAAT USER KLIK (KEBIJAKAN BROWSER)
+    // FULLSCREEN - SAAT USER KLIK ATAU TAP
     // ============================================================
+    function requestFullscreen(element) {
+      if (!element) return;
+      try {
+        if (element.requestFullscreen) {
+          element.requestFullscreen();
+        } else if (element.webkitRequestFullscreen) {
+          element.webkitRequestFullscreen();
+        } else if (element.msRequestFullscreen) {
+          element.msRequestFullscreen();
+        }
+      } catch (err) {
+        console.log('Fullscreen tidak diizinkan:', err.message);
+      }
+    }
+
+    // Fullscreen saat tap/klik
     document.addEventListener('click', function() {
       var iframeEl = document.getElementById('appIframe');
-      if (iframeEl && !document.fullscreenElement) {
-        try {
-          if (iframeEl.requestFullscreen) {
-            iframeEl.requestFullscreen();
-          } else if (iframeEl.webkitRequestFullscreen) {
-            iframeEl.webkitRequestFullscreen();
-          }
-        } catch (err) {
-          console.log('Fullscreen tidak diizinkan:', err.message);
-        }
+      if (iframeEl && !document.fullscreenElement && !document.webkitFullscreenElement) {
+        requestFullscreen(iframeEl);
+      }
+    }, { once: true });
+
+    document.addEventListener('touchstart', function() {
+      var iframeEl = document.getElementById('appIframe');
+      if (iframeEl && !document.fullscreenElement && !document.webkitFullscreenElement) {
+        requestFullscreen(iframeEl);
       }
     }, { once: true });
 
@@ -212,16 +247,46 @@
     window.addEventListener('load', function() {
       var iframeEl = document.getElementById('appIframe');
       if (iframeEl && document.fullscreenEnabled) {
-        try {
-          if (iframeEl.requestFullscreen) {
-            iframeEl.requestFullscreen().catch(function() {});
-          } else if (iframeEl.webkitRequestFullscreen) {
-            iframeEl.webkitRequestFullscreen();
-          }
-        } catch (err) {
-          console.log('Auto fullscreen gagal (diblokir browser):', err.message);
-        }
+        setTimeout(function() {
+          requestFullscreen(iframeEl);
+        }, 500);
       }
+    });
+
+    // ============================================================
+    // DETEKSI KEYBOARD OPEN - ADJUST IFRAME (CHROME HP)
+    // ============================================================
+    if ('visualViewport' in window) {
+      var initialHeight = window.visualViewport.height;
+      window.visualViewport.addEventListener('resize', function() {
+        var currentHeight = window.visualViewport.height;
+        var iframeEl = document.getElementById('appIframe');
+        if (currentHeight < initialHeight) {
+          // Keyboard terbuka - iframe tetap full
+          iframeEl.style.height = '100vh';
+          iframeEl.style.minHeight = '100vh';
+          iframeEl.style.maxHeight = '100vh';
+        } else {
+          // Keyboard tertutup
+          iframeEl.style.height = '';
+          iframeEl.style.minHeight = '';
+          iframeEl.style.maxHeight = '';
+        }
+      });
+    }
+
+    // ============================================================
+    // ORIENTATION CHANGE - REFRESH HEIGHT
+    // ============================================================
+    window.addEventListener('orientationchange', function() {
+      setTimeout(function() {
+        var iframeEl = document.getElementById('appIframe');
+        if (iframeEl) {
+          iframeEl.style.height = '100%';
+          iframeEl.style.minHeight = '100vh';
+          iframeEl.style.maxHeight = '100vh';
+        }
+      }, 300);
     });
   </script>
 
