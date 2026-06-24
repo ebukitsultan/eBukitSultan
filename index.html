@@ -9,71 +9,68 @@
        RESET TOTAL - TANPA RUANG KOSONG
     ============================================================ */
     * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+      margin: 0 !important;
+      padding: 0 !important;
+      box-sizing: border-box !important;
     }
 
     html {
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      background: #F1F5F9;
+      width: 100% !important;
+      height: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      overflow: hidden !important;
+      background: #F1F5F9 !important;
     }
 
     body {
-      width: 100%;
-      height: 100%;
-      min-height: 100vh;
-      min-height: -webkit-fill-available;
-      min-height: 100dvh;
-      max-height: 100vh;
-      max-height: -webkit-fill-available;
-      max-height: 100dvh;
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      background: #F1F5F9;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      width: 100% !important;
+      height: 100% !important;
+      min-height: 100vh !important;
+      min-height: -webkit-fill-available !important;
+      min-height: 100dvh !important;
+      max-height: 100vh !important;
+      max-height: -webkit-fill-available !important;
+      max-height: 100dvh !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      overflow: hidden !important;
+      background: #F1F5F9 !important;
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
     }
 
     /* ============================================================
        IFRAME - FULL LAYAR TANPA RUANG KOSONG
     ============================================================ */
     iframe {
-      width: 100%;
-      height: 100%;
-      min-height: 100vh;
-      min-height: -webkit-fill-available;
-      min-height: 100dvh;
-      max-height: 100vh;
-      max-height: -webkit-fill-available;
-      max-height: 100dvh;
-      max-width: 100vw;
-      border: none;
-      margin: 0;
-      padding: 0;
-      display: block;
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: #F1F5F9;
-      z-index: 1;
-      overflow: hidden;
-      /* Prevent iframe scroll */
-      overflow-y: hidden;
-      overflow-x: hidden;
+      width: 100% !important;
+      height: 100% !important;
+      min-height: 100vh !important;
+      min-height: -webkit-fill-available !important;
+      min-height: 100dvh !important;
+      max-height: 100vh !important;
+      max-height: -webkit-fill-available !important;
+      max-height: 100dvh !important;
+      max-width: 100vw !important;
+      border: none !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      display: block !important;
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      background: #F1F5F9 !important;
+      z-index: 1 !important;
+      overflow: hidden !important;
     }
 
     /* ============================================================
@@ -81,16 +78,16 @@
     ============================================================ */
     @supports (-webkit-touch-callout: none) {
       html, body, iframe {
-        min-height: -webkit-fill-available;
-        max-height: -webkit-fill-available;
+        min-height: -webkit-fill-available !important;
+        max-height: -webkit-fill-available !important;
       }
       body {
-        height: -webkit-fill-available;
+        height: -webkit-fill-available !important;
       }
       iframe {
-        height: -webkit-fill-available;
-        min-height: -webkit-fill-available;
-        max-height: -webkit-fill-available;
+        height: -webkit-fill-available !important;
+        min-height: -webkit-fill-available !important;
+        max-height: -webkit-fill-available !important;
       }
     }
 
@@ -99,20 +96,8 @@
     ============================================================ */
     @-moz-document url-prefix() {
       html, body, iframe {
-        min-height: 100vh;
-        max-height: 100vh;
-      }
-    }
-
-    /* ============================================================
-       LANDSCAPE HP - TETAP FULL
-    ============================================================ */
-    @media (orientation: landscape) and (max-height: 600px) {
-      html, body, iframe {
-        min-height: 100vh;
-        min-height: 100dvh;
-        max-height: 100vh;
-        max-height: 100dvh;
+        min-height: 100vh !important;
+        max-height: 100vh !important;
       }
     }
 
@@ -121,17 +106,17 @@
     ============================================================ */
     @media (orientation: portrait) and (max-width: 480px) {
       html, body, iframe {
-        min-height: 100vh;
-        min-height: -webkit-fill-available;
-        min-height: 100dvh;
-        max-height: 100vh;
-        max-height: -webkit-fill-available;
-        max-height: 100dvh;
+        min-height: 100vh !important;
+        min-height: -webkit-fill-available !important;
+        min-height: 100dvh !important;
+        max-height: 100vh !important;
+        max-height: -webkit-fill-available !important;
+        max-height: 100dvh !important;
       }
       iframe {
-        height: 100dvh;
-        min-height: 100dvh;
-        max-height: 100dvh;
+        height: 100dvh !important;
+        min-height: 100dvh !important;
+        max-height: 100dvh !important;
       }
     }
 
@@ -139,63 +124,52 @@
        SEMBUNYIKAN SCROLL BAR
     ============================================================ */
     ::-webkit-scrollbar {
-      width: 0px;
-      height: 0px;
-      background: transparent;
-      display: none;
+      width: 0px !important;
+      height: 0px !important;
+      background: transparent !important;
+      display: none !important;
     }
-    ::-webkit-scrollbar-track { background: transparent; display: none; }
-    ::-webkit-scrollbar-thumb { background: transparent; display: none; }
-    * { scrollbar-width: none; -ms-overflow-style: none; }
+    ::-webkit-scrollbar-track { display: none !important; }
+    ::-webkit-scrollbar-thumb { display: none !important; }
+    * { scrollbar-width: none !important; -ms-overflow-style: none !important; }
 
     /* ============================================================
        LOADING - PREVENT WHITE FLASH
     ============================================================ */
     .loading-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: #F1F5F9;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      transition: opacity 0.5s ease;
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      background: #F1F5F9 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      z-index: 9999 !important;
+      transition: opacity 0.5s ease !important;
     }
     .loading-overlay.hidden {
-      opacity: 0;
-      pointer-events: none;
+      opacity: 0 !important;
+      pointer-events: none !important;
     }
     .loading-spinner {
-      width: 48px;
-      height: 48px;
-      border: 4px solid rgba(79, 70, 229, 0.1);
-      border-top: 4px solid #4F46E5;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
+      width: 48px !important;
+      height: 48px !important;
+      border: 4px solid rgba(79, 70, 229, 0.1) !important;
+      border-top: 4px solid #4F46E5 !important;
+      border-radius: 50% !important;
+      animation: spin 0.8s linear infinite !important;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
     .loading-text {
-      margin-top: 16px;
-      font-family: 'Inter', -apple-system, sans-serif;
-      font-size: 14px;
-      font-weight: 600;
-      color: #475569;
-      letter-spacing: 0.5px;
-    }
-
-    /* ============================================================
-       KEYBOARD OPEN - ADJUST HEIGHT (CHROME HP)
-    ============================================================ */
-    @media (max-width: 480px) and (orientation: portrait) {
-      .keyboard-open iframe {
-        height: 100vh !important;
-        min-height: 100vh !important;
-        max-height: 100vh !important;
-      }
+      margin-top: 16px !important;
+      font-family: 'Inter', -apple-system, sans-serif !important;
+      font-size: 14px !important;
+      font-weight: 600 !important;
+      color: #475569 !important;
+      letter-spacing: 0.5px !important;
     }
   </style>
 </head>
@@ -231,7 +205,6 @@
         }, 300);
       });
 
-      // Fallback: hilangkan loading setelah 5 detik
       setTimeout(function() {
         loadingOverlay.classList.add('hidden');
       }, 5000);
@@ -255,7 +228,6 @@
       }
     }
 
-    // Fullscreen saat tap/klik (user gesture)
     var fullscreenAttempted = false;
 
     document.addEventListener('click', function() {
@@ -265,7 +237,7 @@
         fullscreenAttempted = true;
         requestFullscreen(iframeEl);
       }
-    });
+    }, { once: true });
 
     document.addEventListener('touchstart', function() {
       if (fullscreenAttempted) return;
@@ -274,10 +246,10 @@
         fullscreenAttempted = true;
         requestFullscreen(iframeEl);
       }
-    });
+    }, { once: true });
 
     // ============================================================
-    // COBA FULLSCREEN SAAT LOAD (MUNGKIN DIBLOKIR BROWSER)
+    // COBA FULLSCREEN SAAT LOAD
     // ============================================================
     window.addEventListener('load', function() {
       var iframeEl = document.getElementById('appIframe');
@@ -291,7 +263,7 @@
     });
 
     // ============================================================
-    // DETEKSI KEYBOARD OPEN - ADJUST IFRAME (CHROME HP)
+    // DETEKSI KEYBOARD OPEN - ADJUST IFRAME
     // ============================================================
     if ('visualViewport' in window) {
       var initialHeight = window.visualViewport.height;
@@ -302,7 +274,6 @@
         var iframeEl = document.getElementById('appIframe');
         
         if (currentHeight < initialHeight * 0.7) {
-          // Keyboard terbuka
           isKeyboardOpen = true;
           if (iframeEl) {
             iframeEl.style.height = '100vh';
@@ -310,7 +281,6 @@
             iframeEl.style.maxHeight = '100vh';
           }
         } else if (isKeyboardOpen && currentHeight >= initialHeight * 0.85) {
-          // Keyboard tertutup
           isKeyboardOpen = false;
           if (iframeEl) {
             iframeEl.style.height = '';
@@ -332,21 +302,8 @@
           iframeEl.style.minHeight = '100vh';
           iframeEl.style.maxHeight = '100vh';
         }
-        // Reset fullscreen attempt on orientation change
         fullscreenAttempted = false;
       }, 400);
-    });
-
-    // ============================================================
-    // RESIZE WINDOW - REFRESH HEIGHT
-    // ============================================================
-    window.addEventListener('resize', function() {
-      var iframeEl = document.getElementById('appIframe');
-      if (iframeEl && !isKeyboardOpen) {
-        iframeEl.style.height = '100%';
-        iframeEl.style.minHeight = '100vh';
-        iframeEl.style.maxHeight = '100vh';
-      }
     });
 
     // ============================================================
@@ -355,15 +312,12 @@
     if (iframe) {
       iframe.addEventListener('load', function() {
         try {
-          // Prevent scrolling inside iframe
           var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
           if (iframeDoc) {
             iframeDoc.body.style.overflow = 'hidden';
             iframeDoc.documentElement.style.overflow = 'hidden';
           }
-        } catch (e) {
-          // Cross-origin, ignore
-        }
+        } catch (e) {}
       });
     }
   </script>
