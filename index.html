@@ -121,6 +121,23 @@
     }
 
     /* ============================================================
+       LANDSCAPE HP - TETAP FULL
+    ============================================================ */
+    @media (orientation: landscape) and (max-height: 600px) {
+      html, body, iframe {
+        min-height: 100vh !important;
+        min-height: 100dvh !important;
+        max-height: 100vh !important;
+        max-height: 100dvh !important;
+      }
+      iframe {
+        height: 100dvh !important;
+        min-height: 100dvh !important;
+        max-height: 100dvh !important;
+      }
+    }
+
+    /* ============================================================
        SEMBUNYIKAN SCROLL BAR
     ============================================================ */
     ::-webkit-scrollbar {
@@ -171,6 +188,44 @@
       color: #475569 !important;
       letter-spacing: 0.5px !important;
     }
+
+    /* ============================================================
+       TAMBAHAN UNTUK SINKRONISASI DENGAN BACKEND
+    ============================================================ */
+    /* Pastikan iframe tidak bisa di-scroll horizontal */
+    iframe {
+      overflow: hidden !important;
+    }
+
+    /* Desktop mode - tetap rapi */
+    @media (min-width: 769px) {
+      body {
+        background: #E8ECF1 !important;
+        padding: 20px !important;
+        align-items: center !important;
+        justify-content: center !important;
+        position: relative !important;
+      }
+      iframe {
+        max-width: 480px !important;
+        border-radius: 20px !important;
+        box-shadow: 0 8px 40px rgba(0,0,0,0.12) !important;
+        position: relative !important;
+        height: 90vh !important;
+        min-height: 600px !important;
+        max-height: 95vh !important;
+      }
+    }
+
+    /* Safe area untuk iPhone notch */
+    @supports (padding: max(0px)) {
+      body {
+        padding-left: max(12px, env(safe-area-inset-left)) !important;
+        padding-right: max(12px, env(safe-area-inset-right)) !important;
+        padding-top: max(12px, env(safe-area-inset-top)) !important;
+        padding-bottom: max(12px, env(safe-area-inset-bottom)) !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -188,7 +243,7 @@
     allowfullscreen="true"
     loading="lazy"
     scrolling="no"
-    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals">
+    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads">
   </iframe>
 
   <script>
@@ -205,9 +260,15 @@
         }, 300);
       });
 
+      // Fallback: hilangkan loading setelah 5 detik
       setTimeout(function() {
         loadingOverlay.classList.add('hidden');
       }, 5000);
+
+      // Jika iframe gagal load, hilangkan loading juga
+      iframe.addEventListener('error', function() {
+        loadingOverlay.classList.add('hidden');
+      });
     }
 
     // ============================================================
@@ -274,6 +335,7 @@
         var iframeEl = document.getElementById('appIframe');
         
         if (currentHeight < initialHeight * 0.7) {
+          // Keyboard terbuka
           isKeyboardOpen = true;
           if (iframeEl) {
             iframeEl.style.height = '100vh';
@@ -281,6 +343,7 @@
             iframeEl.style.maxHeight = '100vh';
           }
         } else if (isKeyboardOpen && currentHeight >= initialHeight * 0.85) {
+          // Keyboard tertutup
           isKeyboardOpen = false;
           if (iframeEl) {
             iframeEl.style.height = '';
@@ -307,6 +370,18 @@
     });
 
     // ============================================================
+    // RESIZE WINDOW - REFRESH HEIGHT
+    // ============================================================
+    window.addEventListener('resize', function() {
+      var iframeEl = document.getElementById('appIframe');
+      if (iframeEl && !isKeyboardOpen) {
+        iframeEl.style.height = '100%';
+        iframeEl.style.minHeight = '100vh';
+        iframeEl.style.maxHeight = '100vh';
+      }
+    });
+
+    // ============================================================
     // PREVENT IFRAME SCROLL
     // ============================================================
     if (iframe) {
@@ -316,10 +391,42 @@
           if (iframeDoc) {
             iframeDoc.body.style.overflow = 'hidden';
             iframeDoc.documentElement.style.overflow = 'hidden';
+            // Hapus padding/margin yang mungkin ada di dalam iframe
+            iframeDoc.body.style.margin = '0';
+            iframeDoc.body.style.padding = '0';
           }
-        } catch (e) {}
+        } catch (e) {
+          // Cross-origin, ignore
+          console.log('Tidak bisa mengakses iframe content (cross-origin)');
+        }
       });
     }
+
+    // ============================================================
+    // HIDE BANNER GOOGLE APPS SCRIPT (jika ada)
+    // ============================================================
+    if (iframe) {
+      iframe.addEventListener('load', function() {
+        try {
+          var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+          if (iframeDoc) {
+            var banners = iframeDoc.querySelectorAll('#docs-banner, .docs-banner, .docs-banner-container, div[role="banner"]');
+            banners.forEach(function(el) {
+              el.style.display = 'none';
+              el.style.visibility = 'hidden';
+              el.style.height = '0';
+              el.style.overflow = 'hidden';
+            });
+          }
+        } catch (e) {
+          // Cross-origin, ignore
+        }
+      });
+    }
+
+    console.log('✅ eBukitSultan wrapper loaded successfully!');
+    console.log('📱 Device: ' + (navigator.userAgent || 'Unknown'));
+    console.log('🔄 Iframe URL: ' + (iframe ? iframe.src : 'No iframe'));
   </script>
 
 </body>
