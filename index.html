@@ -4,6 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
   <title>eBukitSultan</title>
+  <link rel="manifest" href="manifest.webmanifest">
+
+<meta name="theme-color" content="#4F46E5">
+
+<meta name="mobile-web-app-capable" content="yes">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+<link rel="apple-touch-icon" href="icons/icon-192.png">
   <style>
     /* ============================================================
        RESET TOTAL - TANPA RUANG KOSONG
@@ -440,6 +451,14 @@
     console.log('📱 Device: ' + (navigator.userAgent || 'Unknown'));
     console.log('🔄 Iframe URL: ' + (iframe ? iframe.src : 'No iframe'));
   </script>
-
+<script>
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+        navigator.serviceWorker.register('./service-worker.js')
+            .then(() => console.log('Service Worker berhasil didaftarkan'))
+            .catch(err => console.error('Gagal mendaftarkan Service Worker', err));
+    });
+}
+</script>
 </body>
 </html>
