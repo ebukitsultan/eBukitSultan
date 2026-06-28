@@ -1,59 +1,32 @@
-const CACHE_NAME="ebukitsultan-v1";
+const CACHE_NAME = "ebukitsultan-v1";
 
-const urls=[
-"./",
-"./index.html",
-"./offline.html",
-"./manifest.webmanifest"
+const urlsToCache = [
+  "/eBukitSultan/",
+  "/eBukitSultan/index.html",
+  "/eBukitSultan/manifest.webmanifest",
+  "/eBukitSultan/offline.html"
 ];
 
-self.addEventListener("install",e=>{
-e.waitUntil(
-caches.open(CACHE_NAME)
-.then(cache=>cache.addAll(urls))
-);
-self.skipWaiting();
+self.addEventListener("install", event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(urlsToCache))
+  );
+  self.skipWaiting();
 });
 
-self.addEventListener("activate",e=>{
-e.waitUntil(
-caches.keys().then(keys=>{
-return Promise.all(
-keys.filter(k=>k!==CACHE_NAME)
-.map(k=>caches.delete(k))
-);
-})
-);
-self.clients.claim();
+self.addEventListener("activate", event => {
+  event.waitUntil(self.clients.claim());
 });
 
-self.addEventListener("fetch",e=>{
+self.addEventListener("fetch", event => {
+  if (event.request.method !== "GET") return;
 
-if(e.request.method!=="GET") return;
-
-e.respondWith(
-fetch(e.request)
-.then(r=>{
-
-let clone=r.clone();
-
-caches.open(CACHE_NAME)
-.then(cache=>cache.put(e.request,clone));
-
-return r;
-
-})
-.catch(()=>{
-
-return caches.match(e.request)
-.then(res=>{
-
-return res || caches.match("./offline.html");
-
-});
-
-})
-
-);
-
+  event.respondWith(
+    fetch(event.request)
+      .catch(() => caches.match(event.request))
+      .then(response => {
+        return response || caches.match("/eBukitSultan/offline.html");
+      })
+  );
 });
