@@ -2,30 +2,23 @@
   "name": "eBukitSultan",
   "short_name": "eBukitSultan",
   "description": "Administrasi IPL Warga Blok B Bukit Sultan",
-  "start_url": "./",
-  "scope": "./",
+  "start_url": "/eBukitSultan/",
+  "scope": "/eBukitSultan/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#F1F5F9",
   "theme_color": "#4F46E5",
   "lang": "id-ID",
-
-  "icons":[
+  "icons": [
     {
-      "src":"icons/icon-192.png",
-      "sizes":"192x192",
-      "type":"image/png"
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
     },
     {
-      "src":"icons/icon-512.png",
-      "sizes":"512x512",
-      "type":"image/png"
-    },
-    {
-      "src":"icons/maskable-512.png",
-      "sizes":"512x512",
-      "type":"image/png",
-      "purpose":"maskable"
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
     }
   ]
 }
