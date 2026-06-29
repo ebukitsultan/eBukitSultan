@@ -250,7 +250,7 @@
     </p>
 
     <!-- Button -->
-    <button class="btn" onclick="window.location.reload()">
+    <button class="btn" onclick="handleReload()">
       <span class="icon-btn">🔄</span> Coba Lagi
     </button>
 
@@ -277,9 +277,11 @@
       if (online) {
         statusDot.className = 'status-dot online';
         statusText.textContent = 'Online';
+        document.querySelector('.btn').innerHTML = '<span class="icon-btn">✅</span> Reload Sekarang';
       } else {
         statusDot.className = 'status-dot';
         statusText.textContent = 'Offline';
+        document.querySelector('.btn').innerHTML = '<span class="icon-btn">🔄</span> Coba Lagi';
       }
     }
 
@@ -289,10 +291,6 @@
     // Listener perubahan koneksi
     window.addEventListener('online', function() {
       updateStatus(true);
-      // Auto reload setelah 1 detik saat online
-      setTimeout(function() {
-        window.location.reload();
-      }, 1000);
     });
 
     window.addEventListener('offline', function() {
@@ -300,13 +298,30 @@
     });
 
     // ============================================================
-    // AUTO RELOAD (Cek setiap 3 detik)
+    // HANDLE RELOAD
     // ============================================================
-    setInterval(function() {
+    function handleReload() {
       if (navigator.onLine) {
         window.location.reload();
+      } else {
+        alert('❌ Anda masih offline. Silakan sambungkan internet terlebih dahulu.');
+        statusDot.className = 'status-dot';
+        statusText.textContent = 'Offline - Tidak bisa reload';
       }
-    }, 3000);
+    }
+
+    // ============================================================
+    // REGISTER SERVICE WORKER
+    // ============================================================
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js')
+            .then(registration => {
+                console.log('✅ Service Worker registered:', registration);
+            })
+            .catch(error => {
+                console.log('❌ Service Worker registration failed:', error);
+            });
+    }
 
     // ============================================================
     // FULLSCREEN (Untuk PWA)
