@@ -1,45 +1,348 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<title>Offline</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>eBukitSultan - Offline</title>
 
-<style>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-body{
-font-family:Arial;
-background:#F1F5F9;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-margin:0;
-}
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+      background: #F1F5F9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
 
-.card{
+    .card {
+      background: #FFFFFF;
+      padding: 40px 32px;
+      border-radius: 20px;
+      text-align: center;
+      max-width: 380px;
+      width: 100%;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.06);
+      border: 1px solid rgba(226, 232, 240, 0.6);
+    }
 
-background:white;
-padding:30px;
-border-radius:15px;
-text-align:center;
-box-shadow:0 5px 20px rgba(0,0,0,.15);
+    .icon {
+      font-size: 64px;
+      margin-bottom: 12px;
+      display: block;
+    }
 
-}
+    .title {
+      font-size: 24px;
+      font-weight: 800;
+      color: #0F172A;
+      margin-bottom: 4px;
+    }
 
-</style>
+    .title span {
+      color: #4F46E5;
+    }
 
+    .subtitle {
+      font-size: 14px;
+      font-weight: 500;
+      color: #94A3B8;
+      margin-bottom: 4px;
+    }
+
+    .divider {
+      width: 40px;
+      height: 3px;
+      background: linear-gradient(135deg, #4F46E5, #7C3AED);
+      border-radius: 4px;
+      margin: 12px auto;
+    }
+
+    .message {
+      font-size: 14px;
+      color: #475569;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .message strong {
+      color: #0F172A;
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #4F46E5, #7C3AED);
+      color: #FFFFFF;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 20px rgba(79, 70, 229, 0.2);
+      width: 100%;
+    }
+
+    .btn:active {
+      transform: scale(0.95);
+    }
+
+    .btn .icon-btn {
+      margin-right: 8px;
+    }
+
+    .status-bar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      margin-top: 16px;
+      font-size: 12px;
+      color: #94A3B8;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      background: #EF4444;
+    }
+
+    .status-dot.online {
+      background: #10B981;
+    }
+
+    .footer {
+      margin-top: 20px;
+      font-size: 10px;
+      color: #CBD5E1;
+      letter-spacing: 0.3px;
+    }
+
+    .footer .heart {
+      color: #EF4444;
+      display: inline-block;
+      animation: heartBeat 1.2s ease-in-out infinite;
+    }
+
+    @keyframes heartBeat {
+      0%, 100% { transform: scale(1); }
+      25% { transform: scale(1.1); }
+      50% { transform: scale(1); }
+      75% { transform: scale(1.05); }
+    }
+
+    /* Desktop */
+    @media (min-width: 481px) {
+      .card {
+        padding: 48px 40px;
+        max-width: 420px;
+      }
+      .title {
+        font-size: 28px;
+      }
+      .icon {
+        font-size: 72px;
+      }
+    }
+
+    /* HP Portrait */
+    @media (max-width: 480px) {
+      .card {
+        padding: 32px 24px;
+        max-width: 340px;
+      }
+      .title {
+        font-size: 22px;
+      }
+      .icon {
+        font-size: 56px;
+      }
+      .message {
+        font-size: 13px;
+      }
+    }
+
+    /* HP Landscape */
+    @media (orientation: landscape) and (max-height: 500px) {
+      .card {
+        padding: 20px 24px;
+        max-width: 380px;
+      }
+      .icon {
+        font-size: 40px;
+        margin-bottom: 6px;
+      }
+      .title {
+        font-size: 20px;
+      }
+      .message {
+        font-size: 12px;
+        margin-bottom: 12px;
+      }
+      .btn {
+        padding: 10px 20px;
+        font-size: 13px;
+      }
+      .divider {
+        margin: 6px auto;
+      }
+      .status-bar {
+        margin-top: 10px;
+        font-size: 11px;
+      }
+      .footer {
+        margin-top: 12px;
+        font-size: 9px;
+      }
+    }
+
+    /* Chrome HP Fix */
+    @supports (-webkit-touch-callout: none) {
+      body {
+        min-height: -webkit-fill-available;
+      }
+    }
+
+    /* Safe Area iPhone */
+    @supports (padding: max(0px)) {
+      body {
+        padding-left: max(20px, env(safe-area-inset-left));
+        padding-right: max(20px, env(safe-area-inset-right));
+        padding-top: max(20px, env(safe-area-inset-top));
+        padding-bottom: max(20px, env(safe-area-inset-bottom));
+      }
+    }
+
+    /* Firefox */
+    @-moz-document url-prefix() {
+      body {
+        min-height: 100vh;
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <div class="card">
+    <!-- Icon -->
+    <span class="icon">📡</span>
 
-<div class="card">
+    <!-- Title -->
+    <div class="title">eBukit<span>Sultan</span></div>
+    <div class="subtitle">Amanah Dalam Kelola Transparan Dalam Data</div>
 
-<h2>📡 Tidak Ada Internet</h2>
+    <div class="divider"></div>
 
-<p>Silakan sambungkan internet lalu buka kembali eBukitSultan.</p>
+    <!-- Message -->
+    <p class="message">
+      <strong>Tidak Ada Koneksi Internet</strong><br>
+      Silakan sambungkan internet lalu buka kembali eBukitSultan.
+    </p>
 
-</div>
+    <!-- Button -->
+    <button class="btn" onclick="window.location.reload()">
+      <span class="icon-btn">🔄</span> Coba Lagi
+    </button>
 
+    <!-- Status -->
+    <div class="status-bar">
+      <span class="status-dot" id="statusDot"></span>
+      <span id="statusText">Offline</span>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      Developed With <span class="heart">❤️</span> By AF-AHFZB2NO2
+    </div>
+  </div>
+
+  <script>
+    // ============================================================
+    // STATUS KONEKSI
+    // ============================================================
+    var statusDot = document.getElementById('statusDot');
+    var statusText = document.getElementById('statusText');
+
+    function updateStatus(online) {
+      if (online) {
+        statusDot.className = 'status-dot online';
+        statusText.textContent = 'Online';
+      } else {
+        statusDot.className = 'status-dot';
+        statusText.textContent = 'Offline';
+      }
+    }
+
+    // Status awal
+    updateStatus(navigator.onLine);
+
+    // Listener perubahan koneksi
+    window.addEventListener('online', function() {
+      updateStatus(true);
+      // Auto reload setelah 1 detik saat online
+      setTimeout(function() {
+        window.location.reload();
+      }, 1000);
+    });
+
+    window.addEventListener('offline', function() {
+      updateStatus(false);
+    });
+
+    // ============================================================
+    // AUTO RELOAD (Cek setiap 3 detik)
+    // ============================================================
+    setInterval(function() {
+      if (navigator.onLine) {
+        window.location.reload();
+      }
+    }, 3000);
+
+    // ============================================================
+    // FULLSCREEN (Untuk PWA)
+    // ============================================================
+    function requestFullscreen() {
+      try {
+        if (document.documentElement.requestFullscreen) {
+          document.documentElement.requestFullscreen();
+        } else if (document.documentElement.webkitRequestFullscreen) {
+          document.documentElement.webkitRequestFullscreen();
+        }
+      } catch (err) {
+        console.log('Fullscreen tidak diizinkan:', err.message);
+      }
+    }
+
+    // Coba fullscreen saat load
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(requestFullscreen, 500);
+    });
+
+    // Fullscreen saat klik/tap
+    document.addEventListener('click', function() {
+      if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+        requestFullscreen();
+      }
+    });
+
+    document.addEventListener('touchstart', function() {
+      if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+        requestFullscreen();
+      }
+    });
+
+    console.log('✅ eBukitSultan - Offline Page loaded');
+    console.log('📱 Online Status:', navigator.onLine ? 'Online' : 'Offline');
+  </script>
 </body>
-
 </html>
