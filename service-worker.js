@@ -1,9 +1,9 @@
 // ============================================================
 // SERVICE WORKER - eBukitSultan
-// Versi: 1.0.0
+// Versi: 1.0.1
 // ============================================================
 
-const CACHE_NAME = 'ebukitsultan-v1.0.0';
+const CACHE_NAME = 'ebukitsultan-v1.0.1';
 const OFFLINE_URL = '/offline.html';
 
 // ============================================================
@@ -90,7 +90,6 @@ self.addEventListener('fetch', function(event) {
     event.respondWith(
       fetch(event.request)
         .then(function(response) {
-          // Jika response berhasil, cache copy-nya
           if (response && response.status === 200) {
             var responseClone = response.clone();
             caches.open(CACHE_NAME).then(function(cache) {
@@ -100,7 +99,6 @@ self.addEventListener('fetch', function(event) {
           return response;
         })
         .catch(function() {
-          // Jika gagal (offline), tampilkan offline.html
           console.log('📡 Service Worker: Offline, showing offline page');
           return caches.match(OFFLINE_URL);
         })
@@ -109,25 +107,43 @@ self.addEventListener('fetch', function(event) {
   }
 
   // ============================================================
-  // 2. HANDLE STATIC ASSETS (CSS, JS, Images, etc)
+  // 2. HANDLE API REQUESTS
+  // ============================================================
+  if (event.request.url.includes('/api/')) {
+    event.respondWith(
+      fetch(event.request)
+        .then(function(response) {
+          if (response && response.status === 200) {
+            var responseClone = response.clone();
+            caches.open(CACHE_NAME).then(function(cache) {
+              cache.put(event.request, responseClone);
+            });
+          }
+          return response;
+        })
+        .catch(function() {
+          return caches.match(event.request);
+        })
+    );
+    return;
+  }
+
+  // ============================================================
+  // 3. HANDLE STATIC ASSETS (CSS, JS, Images, etc)
   // ============================================================
   event.respondWith(
     caches.match(event.request)
       .then(function(response) {
-        // Jika ada di cache, return dari cache
         if (response) {
           return response;
         }
 
-        // Jika tidak ada di cache, fetch dari network
         return fetch(event.request)
           .then(function(networkResponse) {
-            // Cek apakah response valid
             if (!networkResponse || networkResponse.status !== 200) {
               return networkResponse;
             }
 
-            // Cache response untuk digunakan nanti
             var responseClone = networkResponse.clone();
             caches.open(CACHE_NAME).then(function(cache) {
               cache.put(event.request, responseClone);
@@ -136,16 +152,14 @@ self.addEventListener('fetch', function(event) {
             return networkResponse;
           })
           .catch(function() {
-            // Jika fetch gagal dan request adalah gambar
-            if (event.request.url.match(/\.(png|jpg|jpeg|gif|svg|webp)$/)) {
+            // Fallback untuk gambar
+            if (event.request.url.match(/\.(png|jpg|jpeg|gif|svg|webp|ico)$/)) {
               return caches.match('/icons/icon-192.png');
             }
-            // Jika gagal dan request adalah font
+            // Fallback untuk font
             if (event.request.url.match(/\.(woff|woff2|ttf|eot)$/)) {
-              // Return nothing, biarkan fallback
               return new Response(null, { status: 404 });
             }
-            // Default fallback
             return new Response(null, { status: 404 });
           });
       })
@@ -153,16 +167,25 @@ self.addEventListener('fetch', function(event) {
 });
 
 // ============================================================
-// MESSAGE EVENT (Untuk komunikasi dengan main thread)
+// MESSAGE EVENT
 // ============================================================
 self.addEventListener('message', function(event) {
   if (event.data && event.data.action === 'skipWaiting') {
     self.skipWaiting();
   }
+  
+  // Untuk update konten
+  if (event.data && event.data.action === 'updateCache') {
+    event.waitUntil(
+      caches.open(CACHE_NAME).then(function(cache) {
+        return cache.addAll(ASSETS);
+      })
+    );
+  }
 });
 
 // ============================================================
-// PUSH NOTIFICATION (Opsional)
+// PUSH NOTIFICATION
 // ============================================================
 self.addEventListener('push', function(event) {
   if (!event.data) return;
@@ -203,14 +226,12 @@ self.addEventListener('notificationclick', function(event) {
       type: 'window',
       includeUncontrolled: true
     }).then(function(windowClients) {
-      // Jika sudah ada window yang terbuka, fokus ke situ
       for (var i = 0; i < windowClients.length; i++) {
         var client = windowClients[i];
         if (client.url === urlToOpen && 'focus' in client) {
           return client.focus();
         }
       }
-      // Jika tidak ada, buka window baru
       if (clients.openWindow) {
         return clients.openWindow(urlToOpen);
       }
