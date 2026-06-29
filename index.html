@@ -3,14 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
-  <title>eBukitSultan</title>
+  <title>eBukitSultan - Warga Blok B</title>
+  
+  <!-- PWA Manifest -->
   <link rel="manifest" href="manifest.webmanifest">
 
-  <meta name="theme-color" content="#4F46E5">
+  <!-- Meta Tags PWA -->
+  <meta name="theme-color" content="#FFFFFF">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="description" content="Administrasi Warga Blok B Bukit Sultan">
+  
+  <!-- Icon -->
   <link rel="apple-touch-icon" href="icons/icon-192.png">
+  
+  <!-- Google Font - Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     /* ============================================================
@@ -28,7 +39,7 @@
       margin: 0 !important;
       padding: 0 !important;
       overflow: hidden !important;
-      background: #F1F5F9 !important;
+      background: #FFFFFF !important;
       position: fixed !important;
       top: 0 !important;
       left: 0 !important;
@@ -48,7 +59,7 @@
       margin: 0 !important;
       padding: 0 !important;
       overflow: hidden !important;
-      background: #F1F5F9 !important;
+      background: #FFFFFF !important;
       display: flex !important;
       justify-content: center !important;
       align-items: center !important;
@@ -69,7 +80,7 @@
       right: 0 !important;
       bottom: 0 !important;
       z-index: 9999 !important;
-      background: linear-gradient(145deg, #4F46E5 0%, #7C3AED 100%) !important;
+      background: #FFFFFF !important;
       display: flex !important;
       flex-direction: column !important;
       align-items: center !important;
@@ -93,6 +104,8 @@
       text-align: center !important;
       padding: 0 30px !important;
       animation: splashFadeIn 0.8s ease !important;
+      position: relative !important;
+      min-height: 80vh !important;
     }
 
     @keyframes splashFadeIn {
@@ -112,8 +125,8 @@
       border-radius: 28px !important;
       object-fit: cover !important;
       margin-bottom: 20px !important;
-      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15) !important;
-      background: rgba(255, 255, 255, 0.95) !important;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08) !important;
+      background: #FFFFFF !important;
       padding: 12px !important;
       animation: logoPulse 2s ease-in-out infinite !important;
     }
@@ -127,32 +140,32 @@
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
       font-size: 32px !important;
       font-weight: 800 !important;
-      color: #FFFFFF !important;
+      color: #0F172A !important;
       letter-spacing: -0.5px !important;
       margin-bottom: 4px !important;
     }
 
     .splash-title span {
-      color: #FCD34D !important;
+      color: #4F46E5 !important;
     }
 
     .splash-subtitle {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
       font-size: 14px !important;
       font-weight: 500 !important;
-      color: rgba(255, 255, 255, 0.7) !important;
+      color: #94A3B8 !important;
       margin-bottom: 24px !important;
       letter-spacing: 0.3px !important;
     }
 
     /* ============================================================
-       LOADING BAR - DIPERBAIKI
+       LOADING BAR
     ============================================================ */
     .loading-bar-container {
       width: 200px !important;
       max-width: 80% !important;
       height: 4px !important;
-      background: rgba(255, 255, 255, 0.15) !important;
+      background: #E2E8F0 !important;
       border-radius: 4px !important;
       overflow: hidden !important;
       margin-bottom: 12px !important;
@@ -161,7 +174,7 @@
     .loading-bar-progress {
       height: 100% !important;
       width: 0% !important;
-      background: linear-gradient(90deg, #FCD34D, #FFFFFF) !important;
+      background: linear-gradient(90deg, #4F46E5, #7C3AED) !important;
       border-radius: 4px !important;
       animation: loadingProgress 2.5s ease-in-out infinite !important;
     }
@@ -177,8 +190,44 @@
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
       font-size: 12px !important;
       font-weight: 500 !important;
-      color: rgba(255, 255, 255, 0.5) !important;
+      color: #94A3B8 !important;
       letter-spacing: 0.5px !important;
+    }
+
+    /* ============================================================
+       SPLASH FOOTER
+    ============================================================ */
+    .splash-footer {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      font-size: 11px !important;
+      font-weight: 500 !important;
+      color: #94A3B8 !important;
+      margin-top: 30px !important;
+      letter-spacing: 0.3px !important;
+      text-align: center !important;
+      width: 100% !important;
+      position: absolute !important;
+      bottom: 30px !important;
+      left: 0 !important;
+      right: 0 !important;
+    }
+
+    .splash-footer .heart {
+      color: #EF4444 !important;
+      display: inline-block !important;
+      animation: heartBeat 1.2s ease-in-out infinite !important;
+    }
+
+    @keyframes heartBeat {
+      0%, 100% { transform: scale(1); }
+      25% { transform: scale(1.1); }
+      50% { transform: scale(1); }
+      75% { transform: scale(1.05); }
+    }
+
+    .splash-footer .developer {
+      color: #4F46E5 !important;
+      font-weight: 700 !important;
     }
 
     /* ============================================================
@@ -302,6 +351,10 @@
       .splash-subtitle {
         font-size: 12px !important;
       }
+      .splash-footer {
+        font-size: 10px !important;
+        bottom: 20px !important;
+      }
     }
 
     /* ============================================================
@@ -334,6 +387,10 @@
       }
       .loading-bar-container {
         width: 150px !important;
+      }
+      .splash-footer {
+        font-size: 9px !important;
+        bottom: 12px !important;
       }
     }
 
@@ -404,7 +461,7 @@
 <body>
 
   <!-- ============================================================
-  SPLASH SCREEN - DIPERBAIKI
+  SPLASH SCREEN
   ============================================================ -->
   <div id="splash-screen">
     <div class="splash-content">
@@ -416,6 +473,10 @@
         <div class="loading-bar-progress"></div>
       </div>
       <div class="loading-text" id="loadingText">Memuat aplikasi...</div>
+      
+      <div class="splash-footer">
+        Developed With <span class="heart">❤️</span> By <span class="developer">AF-AHFZB2NO2</span>
+      </div>
     </div>
   </div>
 
