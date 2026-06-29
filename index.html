@@ -5,20 +5,66 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
   <title>eBukitSultan - Warga Blok B</title>
   
-  <!-- PWA Manifest -->
+  <!-- ============================================================
+  PWA MANIFEST
+  ============================================================ -->
   <link rel="manifest" href="manifest.webmanifest">
 
-  <!-- Meta Tags PWA -->
+  <!-- ============================================================
+  META TAGS UNTUK SPLASH SCREEN PWA
+  ============================================================ -->
+  <!-- Warna dasar splash screen -->
   <meta name="theme-color" content="#FFFFFF">
-  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="msapplication-TileColor" content="#FFFFFF">
+  <meta name="msapplication-TileImage" content="icons/icon-192.png">
+
+  <!-- Untuk iOS PWA -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="eBukitSultan">
   <meta name="description" content="Administrasi Warga Blok B Bukit Sultan">
-  
-  <!-- Icon -->
+
+  <!-- Apple Touch Icon (rounded) -->
   <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-192.png">
+
+  <!-- ============================================================
+  SPLASH SCREEN IOS - APPLE TOUCH STARTUP IMAGE
+  ============================================================ -->
+  <!-- iPhone SE / 8 (4.7 inch) -->
+  <link rel="apple-touch-startup-image" href="icons/splash-750x1334.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)">
   
-  <!-- Google Font - Inter -->
+  <!-- iPhone 8 Plus / 7 Plus (5.5 inch) -->
+  <link rel="apple-touch-startup-image" href="icons/splash-1242x2208.png" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3)">
+  
+  <!-- iPhone X / XS / 11 Pro (5.8 inch) -->
+  <link rel="apple-touch-startup-image" href="icons/splash-1125x2436.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)">
+  
+  <!-- iPhone XR / 11 (6.1 inch) -->
+  <link rel="apple-touch-startup-image" href="icons/splash-828x1792.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)">
+  
+  <!-- iPhone 12 / 13 / 14 (6.1 inch) -->
+  <link rel="apple-touch-startup-image" href="icons/splash-1170x2532.png" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3)">
+  
+  <!-- iPhone 12 Pro Max / 13 Pro Max / 14 Plus (6.7 inch) -->
+  <link rel="apple-touch-startup-image" href="icons/splash-1284x2778.png" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3)">
+  
+  <!-- iPhone 14 Pro (6.1 inch) -->
+  <link rel="apple-touch-startup-image" href="icons/splash-1179x2556.png" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3)">
+  
+  <!-- iPad (10.2 inch) -->
+  <link rel="apple-touch-startup-image" href="icons/splash-1536x2048.png" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)">
+  
+  <!-- iPad Pro (11 inch) -->
+  <link rel="apple-touch-startup-image" href="icons/splash-1668x2388.png" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2)">
+  
+  <!-- iPad Pro (12.9 inch) -->
+  <link rel="apple-touch-startup-image" href="icons/splash-2048x2732.png" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)">
+
+  <!-- ============================================================
+  GOOGLE FONT - INTER
+  ============================================================ -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -71,7 +117,7 @@
     }
 
     /* ============================================================
-       SPLASH SCREEN - DIPERBAIKI
+       SPLASH SCREEN - HTML (UNTUK LOADING)
     ============================================================ */
     #splash-screen {
       position: fixed !important;
@@ -137,7 +183,7 @@
     }
 
     .splash-title {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif !important;
       font-size: 32px !important;
       font-weight: 800 !important;
       color: #0F172A !important;
@@ -150,7 +196,7 @@
     }
 
     .splash-subtitle {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif !important;
       font-size: 14px !important;
       font-weight: 500 !important;
       color: #94A3B8 !important;
@@ -187,7 +233,7 @@
     }
 
     .loading-text {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif !important;
       font-size: 12px !important;
       font-weight: 500 !important;
       color: #94A3B8 !important;
@@ -198,7 +244,7 @@
        SPLASH FOOTER
     ============================================================ */
     .splash-footer {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif !important;
       font-size: 11px !important;
       font-weight: 500 !important;
       color: #94A3B8 !important;
@@ -461,7 +507,7 @@
 <body>
 
   <!-- ============================================================
-  SPLASH SCREEN
+  SPLASH SCREEN - HTML LOADING
   ============================================================ -->
   <div id="splash-screen">
     <div class="splash-content">
