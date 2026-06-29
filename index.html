@@ -16,6 +16,17 @@
 
 <link rel="apple-touch-icon" href="icons/icon-192.png">
   <style>
+    <button id="btnInstall"
+        onclick="installApp()"
+        style="display:none;
+               background:#4F46E5;
+               color:white;
+               border:none;
+               padding:10px 18px;
+               border-radius:8px;
+               cursor:pointer;">
+    📲 Install Aplikasi
+</button>
     /* ============================================================
        RESET TOTAL - TANPA RUANG KOSONG
     ============================================================ */
@@ -252,7 +263,11 @@
   </style>
 </head>
 <body>
-
+<div id="splash-screen">
+    <img src="icons/icon-512.png" alt="Logo">
+    <h2>eBukitSultan</h2>
+    <p>Memuat aplikasi...</p>
+</div>
   <!-- LOADING OVERLAY -->
   <div class="loading-overlay" id="loadingOverlay">
     <div class="loading-spinner"></div>
@@ -459,6 +474,78 @@ if ('serviceWorker' in navigator) {
             .catch(err => console.error('Gagal mendaftarkan Service Worker', err));
     });
 }
+</script>
+  <script>
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+
+    // Tampilkan tombol install jika ada
+    const btn = document.getElementById('btnInstall');
+    if (btn) btn.style.display = 'inline-block';
+});
+
+async function installApp() {
+    if (!deferredPrompt) return;
+
+    deferredPrompt.prompt();
+
+    const { outcome } = await deferredPrompt.userChoice;
+
+    if (outcome === 'accepted') {
+        console.log('Aplikasi berhasil diinstall');
+    }
+
+    deferredPrompt = null;
+
+    const btn = document.getElementById('btnInstall');
+    if (btn) btn.style.display = 'none';
+}
+    #splash-screen{
+position:fixed;
+top:0;
+left:0;
+right:0;
+bottom:0;
+background:#ffffff;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+z-index:999999;
+}
+
+#splash-screen img{
+width:130px;
+height:130px;
+margin-bottom:20px;
+}
+
+#splash-screen h2{
+margin:0;
+font-size:30px;
+color:#123B6D;
+}
+
+#splash-screen p{
+margin-top:10px;
+color:#666;
+}
+</script>
+  <script>
+
+window.addEventListener("load",()=>{
+
+setTimeout(()=>{
+
+document.getElementById("splash-screen").style.display="none";
+
+},1800);
+
+});
+
 </script>
 </body>
 </html>
