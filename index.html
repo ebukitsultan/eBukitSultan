@@ -750,5 +750,36 @@
     console.log('📱 Device: ' + (navigator.userAgent || 'Unknown'));
     console.log('🔄 Iframe URL: ' + (iframe ? iframe.src : 'No iframe'));
   </script>
+  <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(function(registration) {
+          console.log('✅ Service Worker registered successfully:', registration);
+          
+          // Cek update
+          registration.addEventListener('updatefound', function() {
+            var newWorker = registration.installing;
+            console.log('🔄 Service Worker update found');
+            
+            newWorker.addEventListener('statechange', function() {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                console.log('🔄 New Service Worker installed, update available');
+                // Tampilkan notifikasi update ke user
+                if (confirm('Ada versi baru eBukitSultan! Refresh sekarang?')) {
+                  window.location.reload();
+                }
+              }
+            });
+          });
+        })
+        .catch(function(error) {
+          console.error('❌ Service Worker registration failed:', error);
+        });
+    });
+  } else {
+    console.warn('⚠️ Service Worker not supported in this browser');
+  }
+</script>
 </body>
 </html>
