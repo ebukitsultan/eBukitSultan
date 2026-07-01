@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>eBukitSultan - Warga Blok B</title>
   
   <!-- ============================================================
@@ -23,27 +23,56 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
   <style>
+    /* ============================================================
+       RESET & FULLSCREEN
+    ============================================================ */
     * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+      margin: 0 !important;
+      padding: 0 !important;
+      box-sizing: border-box !important;
     }
 
     html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: #FFFFFF;
-      font-family: 'Inter', -apple-system, sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 100% !important;
+      height: 100% !important;
+      overflow: hidden !important;
+      background: #FFFFFF !important;
+      font-family: 'Inter', -apple-system, sans-serif !important;
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+    }
+
+    /* ============================================================
+       SPLASH SCREEN
+    ============================================================ */
+    #splash-screen {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      z-index: 9999 !important;
+      background: #FFFFFF !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      transition: opacity 0.8s ease, transform 0.8s ease !important;
+      opacity: 1 !important;
+    }
+
+    #splash-screen.hidden {
+      opacity: 0 !important;
+      transform: scale(1.05) !important;
+      pointer-events: none !important;
     }
 
     .splash-container {
-      text-align: center;
-      padding: 30px;
-      animation: fadeIn 0.6s ease;
+      text-align: center !important;
+      padding: 30px !important;
+      animation: fadeIn 0.6s ease !important;
     }
 
     @keyframes fadeIn {
@@ -52,42 +81,42 @@
     }
 
     .splash-logo {
-      width: 120px;
-      height: 120px;
-      border-radius: 28px;
-      object-fit: cover;
-      background: #FFFFFF;
-      padding: 12px;
-      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
-      margin-bottom: 20px;
+      width: 120px !important;
+      height: 120px !important;
+      border-radius: 28px !important;
+      object-fit: cover !important;
+      background: #FFFFFF !important;
+      padding: 12px !important;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08) !important;
+      margin-bottom: 20px !important;
     }
 
     .splash-title {
-      font-size: 32px;
-      font-weight: 800;
-      color: #0F172A;
+      font-size: 32px !important;
+      font-weight: 800 !important;
+      color: #0F172A !important;
     }
 
     .splash-title span {
-      color: #4F46E5;
+      color: #4F46E5 !important;
     }
 
     .splash-subtitle {
-      font-size: 14px;
-      font-weight: 500;
-      color: #94A3B8;
-      margin-top: 4px;
-      margin-bottom: 24px;
+      font-size: 14px !important;
+      font-weight: 500 !important;
+      color: #94A3B8 !important;
+      margin-top: 4px !important;
+      margin-bottom: 24px !important;
     }
 
     .loading-spinner {
-      display: inline-block;
-      width: 32px;
-      height: 32px;
-      border: 3px solid #E2E8F0;
-      border-top-color: #4F46E5;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
+      display: inline-block !important;
+      width: 32px !important;
+      height: 32px !important;
+      border: 3px solid #E2E8F0 !important;
+      border-top-color: #4F46E5 !important;
+      border-radius: 50% !important;
+      animation: spin 0.8s linear infinite !important;
     }
 
     @keyframes spin {
@@ -95,43 +124,49 @@
     }
 
     .loading-text {
-      font-size: 13px;
-      color: #94A3B8;
-      margin-top: 12px;
+      font-size: 13px !important;
+      color: #94A3B8 !important;
+      margin-top: 12px !important;
     }
 
     .splash-footer {
-      font-size: 11px;
-      color: #94A3B8;
-      margin-top: 40px;
+      font-size: 11px !important;
+      color: #94A3B8 !important;
+      margin-top: 40px !important;
     }
 
     .splash-footer .heart {
-      color: #EF4444;
+      color: #EF4444 !important;
     }
 
     .splash-footer .developer {
-      color: #4F46E5;
-      font-weight: 700;
+      color: #4F46E5 !important;
+      font-weight: 700 !important;
     }
 
-    .btn-redirect {
-      display: inline-block;
-      margin-top: 16px;
-      padding: 12px 32px;
-      background: #4F46E5;
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      text-decoration: none;
-      transition: transform 0.2s ease;
+    /* ============================================================
+       IFRAME - FULL LAYAR
+    ============================================================ */
+    #appIframe {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      border: none !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      display: block !important;
+      background: #F1F5F9 !important;
+      z-index: 1 !important;
+      opacity: 0 !important;
+      transition: opacity 0.5s ease !important;
     }
 
-    .btn-redirect:active {
-      transform: scale(0.95);
+    #appIframe.loaded {
+      opacity: 1 !important;
     }
 
     /* ============================================================
@@ -139,15 +174,20 @@
     ============================================================ */
     @media (min-width: 769px) {
       body {
-        background: #E8ECF1;
-        padding: 20px;
+        background: #E8ECF1 !important;
+        padding: 20px !important;
       }
-      .splash-container {
-        background: #FFFFFF;
-        padding: 50px 60px;
-        border-radius: 24px;
-        box-shadow: 0 8px 40px rgba(0,0,0,0.1);
-        max-width: 480px;
+      #appIframe {
+        max-width: 480px !important;
+        max-height: 95vh !important;
+        border-radius: 20px !important;
+        box-shadow: 0 8px 40px rgba(0,0,0,0.12) !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        width: 100% !important;
+        height: 90vh !important;
+        min-height: 600px !important;
       }
     }
 
@@ -156,91 +196,181 @@
     ============================================================ */
     @media (max-width: 480px) {
       .splash-logo {
-        width: 90px;
-        height: 90px;
-        padding: 10px;
+        width: 90px !important;
+        height: 90px !important;
+        padding: 10px !important;
       }
       .splash-title {
-        font-size: 26px;
+        font-size: 26px !important;
       }
       .splash-subtitle {
-        font-size: 12px;
+        font-size: 12px !important;
       }
       .splash-footer {
-        font-size: 10px;
+        font-size: 10px !important;
       }
+    }
+
+    /* ============================================================
+       CHROME HP - TOUCH OVERFLOW FIX
+    ============================================================ */
+    @supports (-webkit-touch-callout: none) {
+      html, body, #appIframe {
+        min-height: -webkit-fill-available !important;
+        max-height: -webkit-fill-available !important;
+      }
+    }
+
+    /* ============================================================
+       SEMBUNYIKAN SCROLL BAR
+    ============================================================ */
+    ::-webkit-scrollbar {
+      width: 0px !important;
+      height: 0px !important;
+      display: none !important;
+    }
+    * {
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
     }
   </style>
 </head>
 <body>
 
-  <div class="splash-container">
-    <!-- Logo -->
-    <img src="icons/icon-512.png" class="splash-logo" alt="eBukitSultan Logo">
-    
-    <!-- Title -->
-    <div class="splash-title">eBukit<span>Sultan</span></div>
-    <div class="splash-subtitle">Amanah Dalam Kelola · Transparan Dalam Data</div>
-    
-    <!-- Loading Indicator -->
-    <div class="loading-spinner"></div>
-    <div class="loading-text" id="loadingText">Mengarahkan ke aplikasi...</div>
-    
-    <!-- Fallback Button -->
-    <a href="https://script.google.com/macros/s/AKfycbyXMuqwTDMThOtmY2Z28l8rTQvCRh3UMQhfR2a0rDQBauetzAvWL0dpxGHWZEiWXFMj/exec" class="btn-redirect" id="btnRedirect">
-      🚀 Buka Aplikasi
-    </a>
-    
-    <!-- Footer -->
-    <div class="splash-footer">
-      Developed With <span class="heart">❤️</span> By <span class="developer">AF-AHFZB2NO2</span>
+  <!-- ============================================================
+  SPLASH SCREEN
+  ============================================================ -->
+  <div id="splash-screen">
+    <div class="splash-container">
+      <img src="icons/icon-512.png" class="splash-logo" alt="eBukitSultan Logo">
+      <div class="splash-title">eBukit<span>Sultan</span></div>
+      <div class="splash-subtitle">Amanah Dalam Kelola · Transparan Dalam Data</div>
+      <div class="loading-spinner"></div>
+      <div class="loading-text" id="loadingText">Memuat aplikasi...</div>
+      <div class="splash-footer">
+        Developed With <span class="heart">❤️</span> By <span class="developer">AF-AHFZB2NO2</span>
+      </div>
     </div>
   </div>
 
+  <!-- ============================================================
+  IFRAME APLIKASI
+  ============================================================ -->
+  <iframe 
+    id="appIframe"
+    src="https://script.google.com/macros/s/AKfycbyXMuqwTDMThOtmY2Z28l8rTQvCRh3UMQhfR2a0rDQBauetzAvWL0dpxGHWZEiWXFMj/exec"
+    allowfullscreen="true"
+    loading="lazy"
+    scrolling="no"
+    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads"
+    allow="geolocation; microphone; camera; midi; encrypted-media; *">
+  </iframe>
+
   <script>
     // ============================================================
-    // AUTO REDIRECT KE WEB APP (TANPA IFRAME)
+    // SPLASH SCREEN - HIDE AFTER IFRAME LOAD
     // ============================================================
-    var WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyXMuqwTDMThOtmY2Z28l8rTQvCRh3UMQhfR2a0rDQBauetzAvWL0dpxGHWZEiWXFMj/exec';
+    var splashScreen = document.getElementById('splash-screen');
+    var iframe = document.getElementById('appIframe');
     var loadingText = document.getElementById('loadingText');
-    var btnRedirect = document.getElementById('btnRedirect');
-    var redirectDelay = 1500; // 1.5 detik
 
     // Update loading text
-    var messages = [
-      'Mengarahkan ke aplikasi...',
-      'Menyiapkan data...',
-      'Hampir selesai...'
-    ];
-    var msgIndex = 0;
+    var loadingMessages = ['Memuat aplikasi...', 'Menyiapkan data...', 'Hampir selesai...'];
+    var messageIndex = 0;
 
-    var msgInterval = setInterval(function() {
-      msgIndex = (msgIndex + 1) % messages.length;
+    var messageInterval = setInterval(function() {
+      messageIndex = (messageIndex + 1) % loadingMessages.length;
       if (loadingText) {
-        loadingText.textContent = messages[msgIndex];
+        loadingText.textContent = loadingMessages[messageIndex];
       }
-    }, 1200);
+    }, 2000);
 
-    // Redirect setelah delay
-    setTimeout(function() {
-      clearInterval(msgInterval);
-      if (loadingText) {
-        loadingText.textContent = 'Membuka aplikasi...';
-      }
-      
-      // 🔥 METODE REDIRECT
-      window.location.replace(WEB_APP_URL);
-      
-      // Fallback: jika redirect gagal, tampilkan tombol
-      setTimeout(function() {
-        if (btnRedirect) {
-          btnRedirect.style.display = 'inline-block';
-        }
+    // ============================================================
+    // IFRAME LOAD HANDLER
+    // ============================================================
+    if (iframe) {
+      // Sukses load
+      iframe.addEventListener('load', function() {
+        clearInterval(messageInterval);
         if (loadingText) {
-          loadingText.textContent = 'Klik tombol untuk membuka aplikasi';
+          loadingText.textContent = 'Selesai!';
         }
-      }, 3000);
-    }, redirectDelay);
+        iframe.classList.add('loaded');
+        setTimeout(function() {
+          splashScreen.classList.add('hidden');
+          setTimeout(function() {
+            splashScreen.style.display = 'none';
+          }, 900);
+        }, 500);
+      });
+
+      // Error load
+      iframe.addEventListener('error', function() {
+        clearInterval(messageInterval);
+        if (loadingText) {
+          loadingText.textContent = '⚠️ Gagal memuat, coba refresh';
+        }
+        // Tetap tampilkan iframe meskipun error
+        iframe.classList.add('loaded');
+        setTimeout(function() {
+          splashScreen.classList.add('hidden');
+          setTimeout(function() {
+            splashScreen.style.display = 'none';
+          }, 900);
+        }, 1000);
+      });
+
+      // Fallback: hilangkan splash setelah 7 detik
+      setTimeout(function() {
+        clearInterval(messageInterval);
+        if (loadingText) {
+          loadingText.textContent = 'Memuat...';
+        }
+        iframe.classList.add('loaded');
+        splashScreen.classList.add('hidden');
+        setTimeout(function() {
+          splashScreen.style.display = 'none';
+        }, 900);
+      }, 7000);
+    }
+
+    // ============================================================
+    // FULLSCREEN
+    // ============================================================
+    function requestFullscreen(element) {
+      if (!element) return;
+      try {
+        if (element.requestFullscreen) {
+          element.requestFullscreen();
+        } else if (element.webkitRequestFullscreen) {
+          element.webkitRequestFullscreen();
+        } else if (element.msRequestFullscreen) {
+          element.msRequestFullscreen();
+        }
+      } catch (err) {
+        console.log('Fullscreen tidak diizinkan:', err.message);
+      }
+    }
+
+    var fullscreenAttempted = false;
+
+    document.addEventListener('click', function() {
+      if (fullscreenAttempted) return;
+      var iframeEl = document.getElementById('appIframe');
+      if (iframeEl && !document.fullscreenElement && !document.webkitFullscreenElement) {
+        fullscreenAttempted = true;
+        requestFullscreen(iframeEl);
+      }
+    });
+
+    document.addEventListener('touchstart', function() {
+      if (fullscreenAttempted) return;
+      var iframeEl = document.getElementById('appIframe');
+      if (iframeEl && !document.fullscreenElement && !document.webkitFullscreenElement) {
+        fullscreenAttempted = true;
+        requestFullscreen(iframeEl);
+      }
+    });
 
     // ============================================================
     // INSTALL APP (PWA)
@@ -268,19 +398,8 @@
       });
     }
 
-    // ============================================================
-    // DETEKSI FIREFOX & COOP
-    // ============================================================
-    var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
-    if (isFirefox) {
-      console.log('🦊 Firefox detected - using direct navigation');
-      // Redirect lebih cepat di Firefox
-      setTimeout(function() {
-        window.location.replace(WEB_APP_URL);
-      }, 500);
-    }
-
     console.log('✅ eBukitSultan wrapper loaded!');
+    console.log('🔄 Iframe URL:', iframe ? iframe.src : 'No iframe');
   </script>
 </body>
 </html>
