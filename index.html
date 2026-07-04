@@ -13,7 +13,6 @@
   <!-- ============================================================
   META TAGS UNTUK SPLASH SCREEN PWA
   ============================================================ -->
-  <!-- Warna dasar splash screen -->
   <meta name="theme-color" content="#FFFFFF">
   <meta name="msapplication-TileColor" content="#FFFFFF">
   <meta name="msapplication-TileImage" content="icons/icon-192.png">
@@ -24,7 +23,7 @@
   <meta name="apple-mobile-web-app-title" content="eBukitSultan">
   <meta name="description" content="Administrasi Warga Blok B Bukit Sultan">
 
-  <!-- Apple Touch Icon (rounded) -->
+  <!-- Apple Touch Icon -->
   <link rel="apple-touch-icon" href="icons/icon-192.png">
   <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png">
   <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-192.png">
@@ -32,34 +31,15 @@
   <!-- ============================================================
   SPLASH SCREEN IOS - APPLE TOUCH STARTUP IMAGE
   ============================================================ -->
-  <!-- iPhone SE / 8 (4.7 inch) -->
   <link rel="apple-touch-startup-image" href="icons/splash-750x1334.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)">
-  
-  <!-- iPhone 8 Plus / 7 Plus (5.5 inch) -->
   <link rel="apple-touch-startup-image" href="icons/splash-1242x2208.png" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3)">
-  
-  <!-- iPhone X / XS / 11 Pro (5.8 inch) -->
   <link rel="apple-touch-startup-image" href="icons/splash-1125x2436.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)">
-  
-  <!-- iPhone XR / 11 (6.1 inch) -->
   <link rel="apple-touch-startup-image" href="icons/splash-828x1792.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)">
-  
-  <!-- iPhone 12 / 13 / 14 (6.1 inch) -->
   <link rel="apple-touch-startup-image" href="icons/splash-1170x2532.png" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3)">
-  
-  <!-- iPhone 12 Pro Max / 13 Pro Max / 14 Plus (6.7 inch) -->
   <link rel="apple-touch-startup-image" href="icons/splash-1284x2778.png" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3)">
-  
-  <!-- iPhone 14 Pro (6.1 inch) -->
   <link rel="apple-touch-startup-image" href="icons/splash-1179x2556.png" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3)">
-  
-  <!-- iPad (10.2 inch) -->
   <link rel="apple-touch-startup-image" href="icons/splash-1536x2048.png" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)">
-  
-  <!-- iPad Pro (11 inch) -->
   <link rel="apple-touch-startup-image" href="icons/splash-1668x2388.png" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2)">
-  
-  <!-- iPad Pro (12.9 inch) -->
   <link rel="apple-touch-startup-image" href="icons/splash-2048x2732.png" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)">
 
   <!-- ============================================================
@@ -140,6 +120,16 @@
       opacity: 0 !important;
       transform: scale(1.05) !important;
       pointer-events: none !important;
+    }
+
+    #splash-screen.fade-out {
+      opacity: 0 !important;
+      transform: scale(1.1) !important;
+      transition: opacity 0.6s ease, transform 0.6s ease !important;
+    }
+
+    #splash-screen.hide-complete {
+      display: none !important;
     }
 
     .splash-content {
@@ -511,12 +501,12 @@
   ============================================================ -->
   <div id="splash-screen">
     <div class="splash-content">
-      <img src="icons/icon-512.png" class="splash-logo" alt="eBukitSultan Logo">
+      <img src="icons/icon-512.png" class="splash-logo" alt="eBukitSultan Logo" id="splashLogo">
       <div class="splash-title">eBukit<span>Sultan</span></div>
       <div class="splash-subtitle">Amanah Dalam Kelola · Transparan Dalam Data</div>
       
       <div class="loading-bar-container">
-        <div class="loading-bar-progress"></div>
+        <div class="loading-bar-progress" id="loadingProgress"></div>
       </div>
       <div class="loading-text" id="loadingText">Memuat aplikasi...</div>
       
@@ -545,11 +535,30 @@
 
   <script>
     // ============================================================
-    // SPLASH SCREEN - HIDE AFTER IFRAME LOAD
+    // SPLASH SCREEN - HIDE AFTER IFRAME LOAD (DIPERBAIKI)
     // ============================================================
     var splashScreen = document.getElementById('splash-screen');
     var iframe = document.getElementById('appIframe');
     var loadingText = document.getElementById('loadingText');
+    var loadingProgress = document.getElementById('loadingProgress');
+    var splashHidden = false;
+
+    function hideSplash() {
+      if (splashHidden) return;
+      splashHidden = true;
+      
+      clearInterval(messageInterval);
+      if (loadingText) loadingText.textContent = 'Selesai!';
+      if (loadingProgress) loadingProgress.style.width = '100%';
+      
+      if (iframe) iframe.classList.add('loaded');
+      
+      splashScreen.classList.add('fade-out');
+      setTimeout(function() {
+        splashScreen.classList.add('hide-complete');
+        splashScreen.style.display = 'none';
+      }, 700);
+    }
 
     // Update loading text
     var loadingMessages = [
@@ -561,63 +570,59 @@
 
     var messageInterval = setInterval(function() {
       messageIndex = (messageIndex + 1) % loadingMessages.length;
-      if (loadingText) {
+      if (loadingText && !splashHidden) {
         loadingText.textContent = loadingMessages[messageIndex];
       }
     }, 2000);
 
+    // Progress bar animation
+    var progress = 0;
+    var progressInterval = setInterval(function() {
+      if (splashHidden) {
+        clearInterval(progressInterval);
+        return;
+      }
+      progress = Math.min(progress + Math.random() * 8, 95);
+      if (loadingProgress) {
+        loadingProgress.style.width = progress + '%';
+        loadingProgress.style.transition = 'width 0.5s ease';
+      }
+    }, 300);
+
     if (iframe) {
       // Ketika iframe selesai load
       iframe.addEventListener('load', function() {
-        clearInterval(messageInterval);
-        if (loadingText) {
-          loadingText.textContent = 'Selesai!';
+        clearInterval(progressInterval);
+        if (loadingProgress) {
+          loadingProgress.style.width = '100%';
+          loadingProgress.style.transition = 'width 0.3s ease';
         }
-        
-        // Tampilkan iframe
-        iframe.classList.add('loaded');
-        
-        // Sembunyikan splash screen
-        setTimeout(function() {
-          splashScreen.classList.add('hidden');
-          // Hapus splash screen dari DOM setelah transisi
-          setTimeout(function() {
-            splashScreen.style.display = 'none';
-          }, 900);
-        }, 500);
+        setTimeout(hideSplash, 400);
       });
 
-      // Fallback: hilangkan splash setelah 6 detik
+      // Fallback: hilangkan splash setelah 8 detik (dari 6)
       setTimeout(function() {
-        clearInterval(messageInterval);
-        if (loadingText) {
-          loadingText.textContent = 'Memuat...';
+        if (!splashHidden) {
+          console.log('⏰ Splash timeout, force hide');
+          if (iframe) iframe.classList.add('loaded');
+          hideSplash();
         }
-        iframe.classList.add('loaded');
-        splashScreen.classList.add('hidden');
-        setTimeout(function() {
-          splashScreen.style.display = 'none';
-        }, 900);
-      }, 6000);
+      }, 8000);
 
       // Jika iframe gagal load
       iframe.addEventListener('error', function() {
         clearInterval(messageInterval);
-        if (loadingText) {
-          loadingText.textContent = 'Gagal memuat, coba refresh';
-        }
-        iframe.classList.add('loaded');
-        setTimeout(function() {
-          splashScreen.classList.add('hidden');
-          setTimeout(function() {
-            splashScreen.style.display = 'none';
-          }, 900);
-        }, 1000);
+        clearInterval(progressInterval);
+        if (loadingText) loadingText.textContent = 'Gagal memuat, coba refresh';
+        setTimeout(hideSplash, 1500);
       });
+    } else {
+      // Jika iframe tidak ditemukan
+      setTimeout(hideSplash, 3000);
     }
 
     // ============================================================
-    // FULLSCREEN
+    // FULLSCREEN (DIPERBAIKI)
     // ============================================================
     function requestFullscreen(element) {
       if (!element) return;
@@ -636,22 +641,26 @@
 
     var fullscreenAttempted = false;
 
-    document.addEventListener('click', function() {
+    function attemptFullscreen() {
       if (fullscreenAttempted) return;
       var iframeEl = document.getElementById('appIframe');
       if (iframeEl && !document.fullscreenElement && !document.webkitFullscreenElement) {
         fullscreenAttempted = true;
         requestFullscreen(iframeEl);
       }
+    }
+
+    // Coba fullscreen setelah splash hilang
+    setTimeout(function() {
+      attemptFullscreen();
+    }, 3000);
+
+    document.addEventListener('click', function() {
+      attemptFullscreen();
     });
 
     document.addEventListener('touchstart', function() {
-      if (fullscreenAttempted) return;
-      var iframeEl = document.getElementById('appIframe');
-      if (iframeEl && !document.fullscreenElement && !document.webkitFullscreenElement) {
-        fullscreenAttempted = true;
-        requestFullscreen(iframeEl);
-      }
+      attemptFullscreen();
     });
 
     // ============================================================
@@ -695,6 +704,7 @@
           iframeEl.style.maxHeight = '100vh';
         }
         fullscreenAttempted = false;
+        setTimeout(attemptFullscreen, 500);
       }, 400);
     });
 
@@ -736,50 +746,40 @@
     }
 
     // ============================================================
-    // SERVICE WORKER
+    // SERVICE WORKER - SATU KALI REGISTRASI
     // ============================================================
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
         navigator.serviceWorker.register('./service-worker.js')
-          .then(function() { console.log('Service Worker berhasil didaftarkan'); })
-          .catch(function(err) { console.error('Gagal mendaftarkan Service Worker', err); });
+          .then(function(registration) {
+            console.log('✅ Service Worker registered successfully');
+            
+            registration.addEventListener('updatefound', function() {
+              var newWorker = registration.installing;
+              console.log('🔄 Service Worker update found');
+              
+              newWorker.addEventListener('statechange', function() {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  console.log('🔄 New Service Worker installed, update available');
+                  // Tampilkan notifikasi update ke user
+                  if (confirm('Ada versi baru eBukitSultan! Refresh sekarang?')) {
+                    window.location.reload();
+                  }
+                }
+              });
+            });
+          })
+          .catch(function(error) {
+            console.error('❌ Service Worker registration failed:', error);
+          });
       });
+    } else {
+      console.warn('⚠️ Service Worker not supported in this browser');
     }
 
     console.log('✅ eBukitSultan wrapper loaded successfully!');
     console.log('📱 Device: ' + (navigator.userAgent || 'Unknown'));
     console.log('🔄 Iframe URL: ' + (iframe ? iframe.src : 'No iframe'));
   </script>
-  <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-      navigator.serviceWorker.register('/service-worker.js')
-        .then(function(registration) {
-          console.log('✅ Service Worker registered successfully:', registration);
-          
-          // Cek update
-          registration.addEventListener('updatefound', function() {
-            var newWorker = registration.installing;
-            console.log('🔄 Service Worker update found');
-            
-            newWorker.addEventListener('statechange', function() {
-              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                console.log('🔄 New Service Worker installed, update available');
-                // Tampilkan notifikasi update ke user
-                if (confirm('Ada versi baru eBukitSultan! Refresh sekarang?')) {
-                  window.location.reload();
-                }
-              }
-            });
-          });
-        })
-        .catch(function(error) {
-          console.error('❌ Service Worker registration failed:', error);
-        });
-    });
-  } else {
-    console.warn('⚠️ Service Worker not supported in this browser');
-  }
-</script>
 </body>
 </html>
