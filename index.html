@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>eBukitSultan - Warga Blok B</title>
   
   <!-- ============================================================
@@ -48,6 +51,62 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- ============================================================
+  HAPUS SERVICE WORKER & CACHE - DIEKSEKUSI PALING AWAL
+  ============================================================ -->
+  <script>
+    (function() {
+      // Hapus Service Worker
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          for (var i = 0; i < registrations.length; i++) {
+            registrations[i].unregister();
+            console.log('✅ Service Worker di-unregister');
+          }
+        }).catch(function(err) {
+          console.log('⚠️ Gagal unregister Service Worker:', err);
+        });
+      }
+
+      // Hapus Cache Storage
+      if ('caches' in window) {
+        caches.keys().then(function(names) {
+          for (var i = 0; i < names.length; i++) {
+            caches.delete(names[i]);
+            console.log('✅ Cache dihapus:', names[i]);
+          }
+        }).catch(function(err) {
+          console.log('⚠️ Gagal hapus cache:', err);
+        });
+      }
+
+      // Hapus session storage yang tidak perlu
+      try {
+        sessionStorage.clear();
+        console.log('✅ Session storage dihapus');
+      } catch(e) {}
+
+      // Hapus localStorage yang tidak perlu (kecuali session login)
+      try {
+        var sessionData = localStorage.getItem('ebukitsultan_session');
+        localStorage.clear();
+        if (sessionData) {
+          localStorage.setItem('ebukitsultan_session', sessionData);
+          console.log('✅ Session data disimpan, localStorage lain dihapus');
+        }
+        console.log('✅ Local storage dihapus');
+      } catch(e) {}
+
+      // Force reload jika halaman dimuat dari cache
+      window.addEventListener('load', function() {
+        var perfEntries = performance.getEntriesByType('navigation');
+        if (perfEntries.length > 0 && perfEntries[0].type === 'back_forward') {
+          location.reload(true);
+        }
+      });
+    })();
+  </script>
 
   <style>
     /* ============================================================
@@ -586,11 +645,11 @@
   </div>
 
   <!-- ============================================================
-  IFRAME APLIKASI - GANTI DENGAN URL DEPLOY ANDA
+  IFRAME APLIKASI - MENGGUNAKAN URL GITHUB PAGES
   ============================================================ -->
   <iframe 
     id="appIframe"
-    src="https://script.google.com/macros/s/AKfycbzvPG5Mm8E1TItwmqM3yP0BB95hp8MaoIejkquJmRhiiuhVhHPq4buetmP3Cx4C_0Y7Bg/exec"
+    src="https://ebukitsultan.github.io/eBukitSultan/index.html"
     allowfullscreen="true"
     loading="lazy"
     scrolling="no"
@@ -696,10 +755,8 @@
       // Handle visibility change (user switches tab)
       document.addEventListener('visibilitychange', function() {
         if (document.visibilityState === 'visible' && !splashHidden) {
-          // If app is still loading, try to check iframe again
           if (iframe && iframe.contentWindow) {
             try {
-              // Try to ping iframe
               iframe.contentWindow.postMessage('ping', '*');
             } catch(e) {}
           }
@@ -710,7 +767,6 @@
       console.log('📱 Device: ' + (navigator.userAgent || 'Unknown'));
       console.log('🔄 Iframe URL: ' + (iframe ? iframe.src : 'No iframe'));
       
-      // Expose hideSplash for debugging
       window.hideSplash = hideSplash;
     })();
 
@@ -743,7 +799,6 @@
       }
     }
 
-    // Coba fullscreen setelah splash hilang
     setTimeout(function() {
       attemptFullscreen();
     }, 3000);
@@ -847,43 +902,24 @@
     }
 
     // ============================================================
-    // SERVICE WORKER
+    // SERVICE WORKER - AUTO UNREGISTER
     // ============================================================
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function() {
-        navigator.serviceWorker.register('./service-worker.js')
-          .then(function(registration) {
-            console.log('✅ Service Worker registered successfully');
-            
-            registration.addEventListener('updatefound', function() {
-              var newWorker = registration.installing;
-              console.log('🔄 Service Worker update found');
-              
-              newWorker.addEventListener('statechange', function() {
-                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                  console.log('🔄 New Service Worker installed, update available');
-                  // Tampilkan notifikasi update
-                  var updateMsg = 'Ada versi baru eBukitSultan! Refresh sekarang?';
-                  if (confirm(updateMsg)) {
-                    window.location.reload();
-                  }
-                }
-              });
-            });
-          })
-          .catch(function(error) {
-            console.error('❌ Service Worker registration failed:', error);
-          });
+      // Unregister existing service workers first
+      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for (var i = 0; i < registrations.length; i++) {
+          registrations[i].unregister();
+          console.log('✅ Service Worker di-unregister di awal');
+        }
+      }).catch(function(err) {
+        console.log('⚠️ Gagal unregister Service Worker:', err);
       });
-    } else {
-      console.warn('⚠️ Service Worker not supported in this browser');
     }
 
     // ============================================================
     // MESSAGE FROM IFRAME
     // ============================================================
     window.addEventListener('message', function(event) {
-      // Handle messages from iframe
       if (event.data === 'ping') {
         event.source.postMessage('pong', event.origin);
       }
