@@ -53,11 +53,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- ============================================================
-  HAPUS SERVICE WORKER & CACHE - DIEKSEKUSI PALING AWAL
+  HAPUS SERVICE WORKER & CACHE
   ============================================================ -->
   <script>
     (function() {
-      // Hapus Service Worker
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistrations().then(function(registrations) {
           for (var i = 0; i < registrations.length; i++) {
@@ -69,7 +68,6 @@
         });
       }
 
-      // Hapus Cache Storage
       if ('caches' in window) {
         caches.keys().then(function(names) {
           for (var i = 0; i < names.length; i++) {
@@ -81,21 +79,14 @@
         });
       }
 
-      // Hapus session storage yang tidak perlu
       try {
         sessionStorage.clear();
-        console.log('✅ Session storage dihapus');
-      } catch(e) {}
-
-      // Hapus localStorage yang tidak perlu (kecuali session login)
-      try {
         var sessionData = localStorage.getItem('ebukitsultan_session');
         localStorage.clear();
         if (sessionData) {
           localStorage.setItem('ebukitsultan_session', sessionData);
-          console.log('✅ Session data disimpan, localStorage lain dihapus');
         }
-        console.log('✅ Local storage dihapus');
+        console.log('✅ Storage dihapus');
       } catch(e) {}
 
       // Force reload jika halaman dimuat dari cache
@@ -156,7 +147,7 @@
     }
 
     /* ============================================================
-       SPLASH SCREEN - HTML (UNTUK LOADING)
+       SPLASH SCREEN
     ============================================================ */
     #splash-screen {
       position: fixed !important;
@@ -175,17 +166,11 @@
       transform: scale(1) !important;
     }
 
-    #splash-screen.hidden {
-      opacity: 0 !important;
-      transform: scale(1.05) !important;
-      pointer-events: none !important;
-      display: none !important;
-    }
-
     #splash-screen.fade-out {
       opacity: 0 !important;
       transform: scale(1.08) !important;
       transition: opacity 0.5s ease, transform 0.5s ease !important;
+      pointer-events: none !important;
     }
 
     #splash-screen.hide-complete {
@@ -205,14 +190,8 @@
     }
 
     @keyframes splashFadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(30px) scale(0.95);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
+      from { opacity: 0; transform: translateY(30px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     .splash-logo {
@@ -221,7 +200,7 @@
       border-radius: 28px !important;
       object-fit: cover !important;
       margin-bottom: 20px !important;
-      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08) !important;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.08) !important;
       background: #FFFFFF !important;
       padding: 12px !important;
       animation: logoPulse 2s ease-in-out infinite !important;
@@ -233,7 +212,7 @@
     }
 
     .splash-title {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif !important;
+      font-family: 'Inter', sans-serif !important;
       font-size: 32px !important;
       font-weight: 800 !important;
       color: #0F172A !important;
@@ -249,7 +228,7 @@
     }
 
     .splash-subtitle {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif !important;
+      font-family: 'Inter', sans-serif !important;
       font-size: 14px !important;
       font-weight: 500 !important;
       color: #94A3B8 !important;
@@ -268,7 +247,6 @@
       border-radius: 8px !important;
       overflow: hidden !important;
       margin-bottom: 14px !important;
-      box-shadow: inset 0 1px 2px rgba(0,0,0,0.04) !important;
     }
 
     .loading-bar-progress {
@@ -288,7 +266,7 @@
     }
 
     .loading-text {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif !important;
+      font-family: 'Inter', sans-serif !important;
       font-size: 12px !important;
       font-weight: 500 !important;
       color: #94A3B8 !important;
@@ -297,11 +275,8 @@
       min-height: 20px !important;
     }
 
-    /* ============================================================
-       SPLASH FOOTER
-    ============================================================ */
     .splash-footer {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif !important;
+      font-family: 'Inter', sans-serif !important;
       font-size: 11px !important;
       font-weight: 500 !important;
       color: #94A3B8 !important;
@@ -337,7 +312,7 @@
     }
 
     /* ============================================================
-       IFRAME - FULL LAYAR (DIPERBAIKI UNTUK CHROME ANDROID)
+       IFRAME - FULL LAYAR
     ============================================================ */
     #appIframe {
       width: 100% !important;
@@ -364,15 +339,13 @@
       opacity: 0 !important;
       transition: opacity 0.6s ease !important;
       
-      /* ===== PERBAIKAN UNTUK CHROME ANDROID ===== */
+      /* Perbaikan Chrome Android */
       -webkit-overflow-scrolling: touch !important;
       overflow: auto !important;
       -webkit-transform: translateZ(0) !important;
       transform: translateZ(0) !important;
       -webkit-backface-visibility: hidden !important;
       backface-visibility: hidden !important;
-      -webkit-perspective: 1000 !important;
-      perspective: 1000 !important;
     }
 
     #appIframe.loaded {
@@ -394,7 +367,7 @@
       border: none !important;
       padding: 14px 28px !important;
       border-radius: 14px !important;
-      font-family: 'Inter', -apple-system, sans-serif !important;
+      font-family: 'Inter', sans-serif !important;
       font-size: 15px !important;
       font-weight: 700 !important;
       cursor: pointer !important;
@@ -409,138 +382,21 @@
     }
 
     @keyframes btnInstallPop {
-      from {
-        opacity: 0;
-        transform: translateX(-50%) scale(0.8) translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(-50%) scale(1) translateY(0);
-      }
-    }
-
-    #btnInstall:hover {
-      transform: translateX(-50%) scale(1.03) !important;
-      box-shadow: 0 12px 40px rgba(79, 70, 229, 0.45) !important;
-    }
-
-    #btnInstall:active {
-      transform: translateX(-50%) scale(0.95) !important;
+      from { opacity: 0; transform: translateX(-50%) scale(0.8) translateY(20px); }
+      to { opacity: 1; transform: translateX(-50%) scale(1) translateY(0); }
     }
 
     /* ============================================================
-       CHROME HP - TOUCH OVERFLOW FIX
-    ============================================================ */
-    @supports (-webkit-touch-callout: none) {
-      html, body, #appIframe {
-        min-height: -webkit-fill-available !important;
-        max-height: -webkit-fill-available !important;
-      }
-      body {
-        height: -webkit-fill-available !important;
-      }
-      #appIframe {
-        height: -webkit-fill-available !important;
-        min-height: -webkit-fill-available !important;
-        max-height: -webkit-fill-available !important;
-      }
-    }
-
-    /* ============================================================
-       FIREFOX HP - FIX
-    ============================================================ */
-    @-moz-document url-prefix() {
-      html, body, #appIframe {
-        min-height: 100vh !important;
-        max-height: 100vh !important;
-      }
-    }
-
-    /* ============================================================
-       PORTRAIT HP - FULL FIT
+       RESPONSIVE
     ============================================================ */
     @media (orientation: portrait) and (max-width: 480px) {
-      html, body, #appIframe {
-        min-height: 100vh !important;
-        min-height: -webkit-fill-available !important;
-        min-height: 100dvh !important;
-        max-height: 100vh !important;
-        max-height: -webkit-fill-available !important;
-        max-height: 100dvh !important;
-      }
-      #appIframe {
-        height: 100dvh !important;
-        min-height: 100dvh !important;
-        max-height: 100dvh !important;
-      }
-      
-      .splash-logo {
-        width: 90px !important;
-        height: 90px !important;
-        padding: 10px !important;
-      }
-      .splash-title {
-        font-size: 26px !important;
-      }
-      .splash-subtitle {
-        font-size: 12px !important;
-        margin-bottom: 20px !important;
-      }
-      .loading-bar-container {
-        width: 180px !important;
-      }
-      .splash-footer {
-        font-size: 10px !important;
-        bottom: 20px !important;
-      }
+      .splash-logo { width: 90px !important; height: 90px !important; padding: 10px !important; }
+      .splash-title { font-size: 26px !important; }
+      .splash-subtitle { font-size: 12px !important; margin-bottom: 20px !important; }
+      .loading-bar-container { width: 180px !important; }
+      .splash-footer { font-size: 10px !important; bottom: 20px !important; }
     }
 
-    /* ============================================================
-       LANDSCAPE HP - TETAP FULL
-    ============================================================ */
-    @media (orientation: landscape) and (max-height: 600px) {
-      html, body, #appIframe {
-        min-height: 100vh !important;
-        min-height: 100dvh !important;
-        max-height: 100vh !important;
-        max-height: 100dvh !important;
-      }
-      #appIframe {
-        height: 100dvh !important;
-        min-height: 100dvh !important;
-        max-height: 100dvh !important;
-      }
-      
-      .splash-logo {
-        width: 70px !important;
-        height: 70px !important;
-        padding: 8px !important;
-      }
-      .splash-title {
-        font-size: 22px !important;
-      }
-      .splash-subtitle {
-        font-size: 11px !important;
-        margin-bottom: 14px !important;
-      }
-      .loading-bar-container {
-        width: 150px !important;
-        height: 4px !important;
-      }
-      .splash-footer {
-        font-size: 9px !important;
-        bottom: 12px !important;
-      }
-      #btnInstall {
-        bottom: 12px !important;
-        padding: 10px 20px !important;
-        font-size: 13px !important;
-      }
-    }
-
-    /* ============================================================
-       DESKTOP MODE
-    ============================================================ */
     @media (min-width: 769px) {
       body {
         background: linear-gradient(135deg, #E8ECF1 0%, #D1D5DB 100%) !important;
@@ -558,84 +414,33 @@
         min-height: 600px !important;
         max-height: 95vh !important;
       }
-      .splash-logo {
-        width: 140px !important;
-        height: 140px !important;
-        padding: 16px !important;
-      }
     }
 
     /* ============================================================
-       SAFE AREA UNTUK IPHONE NOTCH
+       DARK MODE
     ============================================================ */
-    @supports (padding: max(0px)) {
-      body {
-        padding-left: max(12px, env(safe-area-inset-left)) !important;
-        padding-right: max(12px, env(safe-area-inset-right)) !important;
-        padding-top: max(12px, env(safe-area-inset-top)) !important;
-        padding-bottom: max(12px, env(safe-area-inset-bottom)) !important;
-      }
+    @media (prefers-color-scheme: dark) {
+      #splash-screen { background: #0F172A !important; }
+      .splash-title { color: #F1F5F9 !important; }
+      .splash-subtitle { color: #94A3B8 !important; }
+      .splash-footer { color: #64748B !important; }
+      .loading-bar-container { background: #1E293B !important; }
+      .splash-logo { background: #1E293B !important; }
+      body { background: #0F172A !important; }
+      #appIframe { background: #0F172A !important; }
     }
 
     /* ============================================================
        SEMBUNYIKAN SCROLL BAR
     ============================================================ */
-    ::-webkit-scrollbar {
-      width: 0px !important;
-      height: 0px !important;
-      background: transparent !important;
-      display: none !important;
-    }
-    ::-webkit-scrollbar-track { display: none !important; }
-    ::-webkit-scrollbar-thumb { display: none !important; }
+    ::-webkit-scrollbar { display: none !important; }
     * { scrollbar-width: none !important; -ms-overflow-style: none !important; }
-
-    /* ============================================================
-       KEYBOARD OPEN - ADJUST IFRAME
-    ============================================================ */
-    @media (max-width: 480px) and (orientation: portrait) {
-      .keyboard-open #appIframe {
-        height: 100vh !important;
-        min-height: 100vh !important;
-        max-height: 100vh !important;
-      }
-    }
-
-    /* ============================================================
-       DARK MODE SUPPORT
-    ============================================================ */
-    @media (prefers-color-scheme: dark) {
-      #splash-screen {
-        background: #0F172A !important;
-      }
-      .splash-title {
-        color: #F1F5F9 !important;
-      }
-      .splash-subtitle {
-        color: #94A3B8 !important;
-      }
-      .splash-footer {
-        color: #64748B !important;
-      }
-      .loading-bar-container {
-        background: #1E293B !important;
-      }
-      .splash-logo {
-        background: #1E293B !important;
-      }
-      body {
-        background: #0F172A !important;
-      }
-      #appIframe {
-        background: #0F172A !important;
-      }
-    }
   </style>
 </head>
 <body>
 
   <!-- ============================================================
-  SPLASH SCREEN - HTML LOADING
+  SPLASH SCREEN
   ============================================================ -->
   <div id="splash-screen">
     <div class="splash-content">
@@ -655,11 +460,11 @@
   </div>
 
   <!-- ============================================================
-  IFRAME APLIKASI - TETAP DI GITHUB PAGES
+  IFRAME - RELATIVE PATH (index.html)
   ============================================================ -->
   <iframe 
     id="appIframe"
-    src="https://ebukitsultan.github.io/eBukitSultan/index.html"
+    src="index.html"
     allowfullscreen="true"
     loading="eager"
     scrolling="yes"
@@ -713,9 +518,7 @@
       if (iframe) {
         iframe.addEventListener('load', function() {
           clearInterval(progressInterval);
-          if (loadingProgress) {
-            loadingProgress.style.width = '100%';
-          }
+          if (loadingProgress) loadingProgress.style.width = '100%';
           if (loadingText) loadingText.textContent = '✅ Selesai!';
           setTimeout(hideSplash, 400);
         });
@@ -764,21 +567,9 @@
           if (iframe) iframe.classList.add('loaded');
           hideSplash();
         }
-      }, 10000);
-
-      // Handle visibility change (user switches tab)
-      document.addEventListener('visibilitychange', function() {
-        if (document.visibilityState === 'visible' && !splashHidden) {
-          if (iframe && iframe.contentWindow) {
-            try {
-              iframe.contentWindow.postMessage('ping', '*');
-            } catch(e) {}
-          }
-        }
-      });
+      }, 8000);
 
       console.log('✅ eBukitSultan wrapper loaded');
-      console.log('📱 Device: ' + (navigator.userAgent || 'Unknown'));
       console.log('🔄 Iframe URL: ' + (iframe ? iframe.src : 'No iframe'));
       
       window.hideSplash = hideSplash;
@@ -813,17 +604,9 @@
       }
     }
 
-    setTimeout(function() {
-      attemptFullscreen();
-    }, 3000);
-
-    document.addEventListener('click', function() {
-      attemptFullscreen();
-    });
-
-    document.addEventListener('touchstart', function() {
-      attemptFullscreen();
-    });
+    setTimeout(function() { attemptFullscreen(); }, 3000);
+    document.addEventListener('click', function() { attemptFullscreen(); });
+    document.addEventListener('touchstart', function() { attemptFullscreen(); });
 
     // ============================================================
     // DETEKSI KEYBOARD OPEN
@@ -917,4 +700,17 @@
 
     // ============================================================
     // SERVICE WORKER - AUTO UNREGISTER
-    // ===========================================================
+    // ============================================================
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for (var i = 0; i < registrations.length; i++) {
+          registrations[i].unregister();
+          console.log('✅ Service Worker di-unregister di awal');
+        }
+      }).catch(function(err) {
+        console.log('⚠️ Gagal unregister Service Worker:', err);
+      });
+    }
+  </script>
+</body>
+</html>
