@@ -337,9 +337,9 @@
     }
 
     /* ============================================================
-       IFRAME - FULL LAYAR
+       IFRAME - FULL LAYAR (DIPERBAIKI UNTUK CHROME ANDROID)
     ============================================================ */
-    iframe {
+    #appIframe {
       width: 100% !important;
       height: 100% !important;
       min-height: 100vh !important;
@@ -363,9 +363,19 @@
       overflow: hidden !important;
       opacity: 0 !important;
       transition: opacity 0.6s ease !important;
+      
+      /* ===== PERBAIKAN UNTUK CHROME ANDROID ===== */
+      -webkit-overflow-scrolling: touch !important;
+      overflow: auto !important;
+      -webkit-transform: translateZ(0) !important;
+      transform: translateZ(0) !important;
+      -webkit-backface-visibility: hidden !important;
+      backface-visibility: hidden !important;
+      -webkit-perspective: 1000 !important;
+      perspective: 1000 !important;
     }
 
-    iframe.loaded {
+    #appIframe.loaded {
       opacity: 1 !important;
     }
 
@@ -422,14 +432,14 @@
        CHROME HP - TOUCH OVERFLOW FIX
     ============================================================ */
     @supports (-webkit-touch-callout: none) {
-      html, body, iframe {
+      html, body, #appIframe {
         min-height: -webkit-fill-available !important;
         max-height: -webkit-fill-available !important;
       }
       body {
         height: -webkit-fill-available !important;
       }
-      iframe {
+      #appIframe {
         height: -webkit-fill-available !important;
         min-height: -webkit-fill-available !important;
         max-height: -webkit-fill-available !important;
@@ -440,7 +450,7 @@
        FIREFOX HP - FIX
     ============================================================ */
     @-moz-document url-prefix() {
-      html, body, iframe {
+      html, body, #appIframe {
         min-height: 100vh !important;
         max-height: 100vh !important;
       }
@@ -450,7 +460,7 @@
        PORTRAIT HP - FULL FIT
     ============================================================ */
     @media (orientation: portrait) and (max-width: 480px) {
-      html, body, iframe {
+      html, body, #appIframe {
         min-height: 100vh !important;
         min-height: -webkit-fill-available !important;
         min-height: 100dvh !important;
@@ -458,7 +468,7 @@
         max-height: -webkit-fill-available !important;
         max-height: 100dvh !important;
       }
-      iframe {
+      #appIframe {
         height: 100dvh !important;
         min-height: 100dvh !important;
         max-height: 100dvh !important;
@@ -489,13 +499,13 @@
        LANDSCAPE HP - TETAP FULL
     ============================================================ */
     @media (orientation: landscape) and (max-height: 600px) {
-      html, body, iframe {
+      html, body, #appIframe {
         min-height: 100vh !important;
         min-height: 100dvh !important;
         max-height: 100vh !important;
         max-height: 100dvh !important;
       }
-      iframe {
+      #appIframe {
         height: 100dvh !important;
         min-height: 100dvh !important;
         max-height: 100dvh !important;
@@ -539,7 +549,7 @@
         justify-content: center !important;
         position: relative !important;
       }
-      iframe {
+      #appIframe {
         max-width: 480px !important;
         border-radius: 24px !important;
         box-shadow: 0 20px 80px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,255,255,0.1) !important;
@@ -584,7 +594,7 @@
        KEYBOARD OPEN - ADJUST IFRAME
     ============================================================ */
     @media (max-width: 480px) and (orientation: portrait) {
-      .keyboard-open iframe {
+      .keyboard-open #appIframe {
         height: 100vh !important;
         min-height: 100vh !important;
         max-height: 100vh !important;
@@ -616,7 +626,7 @@
       body {
         background: #0F172A !important;
       }
-      iframe {
+      #appIframe {
         background: #0F172A !important;
       }
     }
@@ -645,15 +655,19 @@
   </div>
 
   <!-- ============================================================
-  IFRAME APLIKASI - MENGGUNAKAN URL GITHUB PAGES
+  IFRAME APLIKASI - TETAP DI GITHUB PAGES
   ============================================================ -->
   <iframe 
     id="appIframe"
-    src="https://script.google.com/macros/s/AKfycbzvPG5Mm8E1TItwmqM3yP0BB95hp8MaoIejkquJmRhiiuhVhHPq4buetmP3Cx4C_0Y7Bg/exec"
+    src="https://ebukitsultan.github.io/eBukitSultan/index.html"
     allowfullscreen="true"
-    loading="lazy"
-    scrolling="no"
-    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads allow-storage-access-by-user-activation">
+    loading="eager"
+    scrolling="yes"
+    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads allow-storage-access-by-user-activation"
+    allow="autoplay; camera; microphone; payment; geolocation; encrypted-media; cross-origin-isolated"
+    frameborder="0"
+    style="width:100%; height:100%; border:none; position:absolute; top:0; left:0;"
+  >
   </iframe>
 
   <!-- ============================================================
@@ -695,6 +709,25 @@
         }, 600);
       }
 
+      // Iframe load event
+      if (iframe) {
+        iframe.addEventListener('load', function() {
+          clearInterval(progressInterval);
+          if (loadingProgress) {
+            loadingProgress.style.width = '100%';
+          }
+          if (loadingText) loadingText.textContent = '✅ Selesai!';
+          setTimeout(hideSplash, 400);
+        });
+
+        iframe.addEventListener('error', function() {
+          clearInterval(messageInterval);
+          clearInterval(progressInterval);
+          if (loadingText) loadingText.textContent = '❌ Gagal memuat, coba refresh';
+          setTimeout(hideSplash, 1500);
+        });
+      }
+
       // Loading messages
       var loadingMessages = [
         '⏳ Memuat aplikasi...',
@@ -723,25 +756,6 @@
           loadingProgress.style.width = progress + '%';
         }
       }, 300);
-
-      // Iframe load event
-      if (iframe) {
-        iframe.addEventListener('load', function() {
-          clearInterval(progressInterval);
-          if (loadingProgress) {
-            loadingProgress.style.width = '100%';
-          }
-          if (loadingText) loadingText.textContent = '✅ Selesai!';
-          setTimeout(hideSplash, 400);
-        });
-
-        iframe.addEventListener('error', function() {
-          clearInterval(messageInterval);
-          clearInterval(progressInterval);
-          if (loadingText) loadingText.textContent = '❌ Gagal memuat, coba refresh';
-          setTimeout(hideSplash, 1500);
-        });
-      }
 
       // Fallback timeout
       loadTimeoutId = setTimeout(function() {
@@ -903,32 +917,4 @@
 
     // ============================================================
     // SERVICE WORKER - AUTO UNREGISTER
-    // ============================================================
-    if ('serviceWorker' in navigator) {
-      // Unregister existing service workers first
-      navigator.serviceWorker.getRegistrations().then(function(registrations) {
-        for (var i = 0; i < registrations.length; i++) {
-          registrations[i].unregister();
-          console.log('✅ Service Worker di-unregister di awal');
-        }
-      }).catch(function(err) {
-        console.log('⚠️ Gagal unregister Service Worker:', err);
-      });
-    }
-
-    // ============================================================
-    // MESSAGE FROM IFRAME
-    // ============================================================
-    window.addEventListener('message', function(event) {
-      if (event.data === 'ping') {
-        event.source.postMessage('pong', event.origin);
-      }
-      if (event.data === 'hideSplash') {
-        if (window.hideSplash) {
-          window.hideSplash();
-        }
-      }
-    });
-  </script>
-</body>
-</html>
+    // ===========================================================
