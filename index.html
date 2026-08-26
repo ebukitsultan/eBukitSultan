@@ -337,9 +337,9 @@
     }
 
     /* ============================================================
-       IFRAME - FULL LAYAR (DIPERBAIKI UNTUK CHROME ANDROID)
+       IFRAME - FULL LAYAR
     ============================================================ */
-    #appIframe {
+    iframe {
       width: 100% !important;
       height: 100% !important;
       min-height: 100vh !important;
@@ -363,19 +363,9 @@
       overflow: hidden !important;
       opacity: 0 !important;
       transition: opacity 0.6s ease !important;
-      
-      /* ===== PERBAIKAN UNTUK CHROME ANDROID ===== */
-      -webkit-overflow-scrolling: touch !important;
-      overflow: auto !important;
-      -webkit-transform: translateZ(0) !important;
-      transform: translateZ(0) !important;
-      -webkit-backface-visibility: hidden !important;
-      backface-visibility: hidden !important;
-      -webkit-perspective: 1000 !important;
-      perspective: 1000 !important;
     }
 
-    #appIframe.loaded {
+    iframe.loaded {
       opacity: 1 !important;
     }
 
@@ -432,14 +422,14 @@
        CHROME HP - TOUCH OVERFLOW FIX
     ============================================================ */
     @supports (-webkit-touch-callout: none) {
-      html, body, #appIframe {
+      html, body, iframe {
         min-height: -webkit-fill-available !important;
         max-height: -webkit-fill-available !important;
       }
       body {
         height: -webkit-fill-available !important;
       }
-      #appIframe {
+      iframe {
         height: -webkit-fill-available !important;
         min-height: -webkit-fill-available !important;
         max-height: -webkit-fill-available !important;
@@ -450,7 +440,7 @@
        FIREFOX HP - FIX
     ============================================================ */
     @-moz-document url-prefix() {
-      html, body, #appIframe {
+      html, body, iframe {
         min-height: 100vh !important;
         max-height: 100vh !important;
       }
@@ -460,7 +450,7 @@
        PORTRAIT HP - FULL FIT
     ============================================================ */
     @media (orientation: portrait) and (max-width: 480px) {
-      html, body, #appIframe {
+      html, body, iframe {
         min-height: 100vh !important;
         min-height: -webkit-fill-available !important;
         min-height: 100dvh !important;
@@ -468,7 +458,7 @@
         max-height: -webkit-fill-available !important;
         max-height: 100dvh !important;
       }
-      #appIframe {
+      iframe {
         height: 100dvh !important;
         min-height: 100dvh !important;
         max-height: 100dvh !important;
@@ -499,13 +489,13 @@
        LANDSCAPE HP - TETAP FULL
     ============================================================ */
     @media (orientation: landscape) and (max-height: 600px) {
-      html, body, #appIframe {
+      html, body, iframe {
         min-height: 100vh !important;
         min-height: 100dvh !important;
         max-height: 100vh !important;
         max-height: 100dvh !important;
       }
-      #appIframe {
+      iframe {
         height: 100dvh !important;
         min-height: 100dvh !important;
         max-height: 100dvh !important;
@@ -549,7 +539,7 @@
         justify-content: center !important;
         position: relative !important;
       }
-      #appIframe {
+      iframe {
         max-width: 480px !important;
         border-radius: 24px !important;
         box-shadow: 0 20px 80px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,255,255,0.1) !important;
@@ -594,7 +584,7 @@
        KEYBOARD OPEN - ADJUST IFRAME
     ============================================================ */
     @media (max-width: 480px) and (orientation: portrait) {
-      .keyboard-open #appIframe {
+      .keyboard-open iframe {
         height: 100vh !important;
         min-height: 100vh !important;
         max-height: 100vh !important;
@@ -626,7 +616,7 @@
       body {
         background: #0F172A !important;
       }
-      #appIframe {
+      iframe {
         background: #0F172A !important;
       }
     }
@@ -655,19 +645,15 @@
   </div>
 
   <!-- ============================================================
-  IFRAME APLIKASI - DENGAN ATRIBUT KHUSUS CHROME ANDROID
+  IFRAME APLIKASI - MENGGUNAKAN URL GITHUB PAGES
   ============================================================ -->
   <iframe 
     id="appIframe"
     src="https://script.google.com/macros/s/AKfycbzvPG5Mm8E1TItwmqM3yP0BB95hp8MaoIejkquJmRhiiuhVhHPq4buetmP3Cx4C_0Y7Bg/exec"
     allowfullscreen="true"
-    loading="eager"
-    scrolling="yes"
-    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads allow-storage-access-by-user-activation"
-    allow="autoplay; camera; microphone; payment; geolocation; encrypted-media; cross-origin-isolated"
-    frameborder="0"
-    style="width:100%; height:100%; border:none; position:absolute; top:0; left:0;"
-  >
+    loading="lazy"
+    scrolling="no"
+    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads allow-storage-access-by-user-activation">
   </iframe>
 
   <!-- ============================================================
@@ -709,38 +695,6 @@
         }, 600);
       }
 
-      // ===== PERBAIKAN: Coba deteksi iframe load dengan postMessage =====
-      var iframeLoaded = false;
-
-      // Listen for messages from iframe
-      window.addEventListener('message', function(event) {
-        if (event.data === 'iframeLoaded') {
-          iframeLoaded = true;
-          hideSplash();
-        }
-      });
-
-      // Iframe load event
-      if (iframe) {
-        iframe.addEventListener('load', function() {
-          clearInterval(progressInterval);
-          if (loadingProgress) {
-            loadingProgress.style.width = '100%';
-          }
-          if (loadingText) loadingText.textContent = '✅ Selesai!';
-          
-          // Tunggu sebentar lalu hide splash
-          setTimeout(hideSplash, 500);
-        });
-
-        iframe.addEventListener('error', function() {
-          clearInterval(messageInterval);
-          clearInterval(progressInterval);
-          if (loadingText) loadingText.textContent = '❌ Gagal memuat, coba refresh';
-          setTimeout(hideSplash, 1500);
-        });
-      }
-
       // Loading messages
       var loadingMessages = [
         '⏳ Memuat aplikasi...',
@@ -770,14 +724,33 @@
         }
       }, 300);
 
-      // ===== FALLBACK: Force hide setelah 8 detik =====
+      // Iframe load event
+      if (iframe) {
+        iframe.addEventListener('load', function() {
+          clearInterval(progressInterval);
+          if (loadingProgress) {
+            loadingProgress.style.width = '100%';
+          }
+          if (loadingText) loadingText.textContent = '✅ Selesai!';
+          setTimeout(hideSplash, 400);
+        });
+
+        iframe.addEventListener('error', function() {
+          clearInterval(messageInterval);
+          clearInterval(progressInterval);
+          if (loadingText) loadingText.textContent = '❌ Gagal memuat, coba refresh';
+          setTimeout(hideSplash, 1500);
+        });
+      }
+
+      // Fallback timeout
       loadTimeoutId = setTimeout(function() {
         if (!splashHidden) {
           console.warn('⏰ Splash timeout, force hide');
           if (iframe) iframe.classList.add('loaded');
           hideSplash();
         }
-      }, 8000);
+      }, 10000);
 
       // Handle visibility change (user switches tab)
       document.addEventListener('visibilitychange', function() {
@@ -932,6 +905,7 @@
     // SERVICE WORKER - AUTO UNREGISTER
     // ============================================================
     if ('serviceWorker' in navigator) {
+      // Unregister existing service workers first
       navigator.serviceWorker.getRegistrations().then(function(registrations) {
         for (var i = 0; i < registrations.length; i++) {
           registrations[i].unregister();
