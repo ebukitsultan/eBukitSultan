@@ -621,6 +621,85 @@ IFRAME - VERSI FIXED UNTUK CHROME ANDROID
         console.log('⚠️ Gagal unregister Service Worker:', err);
       });
     }
+
+        // ============================================================
+    // FIX KHUSUS CHROME ANDROID
+    // ============================================================
+    
+    // 1. Force iframe reload setelah 500ms (bantu cookie sync di Chrome Android)
+    setTimeout(function() {
+        var iframe = document.getElementById('appIframe');
+        if (iframe && !iframe.dataset.reloaded) {
+            iframe.dataset.reloaded = '1';
+            // Reload iframe sekali untuk trigger cookie storage di Chrome Android
+            var originalSrc = iframe.src;
+            iframe.src = 'about:blank';
+            setTimeout(function() {
+                iframe.src = originalSrc;
+            }, 100);
+        }
+    }, 500);
+
+    // 2. Request Storage Access API (kalau didukung Chrome Android)
+    if (document.requestStorageAccess) {
+        document.requestStorageAccess().then(function() {
+            console.log('✅ Storage access granted');
+        }).catch(function(err) {
+            console.log('⚠️ Storage access denied (Chrome Android mungkin block):', err.message);
+        });
+    }
+
+    // 3. Deteksi Chrome Android dan log
+    var isChromeAndroid = /Android/.test(navigator.userAgent) && /Chrome/.test(navigator.userAgent);
+    if (isChromeAndroid) {
+        console.log('📱 Chrome Android terdeteksi — pakai cookie workaround');
+    }
+
+    // 4. Retry load iframe kalau timeout (Chrome Android kadang lambat)
+    var iframeLoadAttempts = 0;
+    var maxIframeAttempts = 3;
+    
+    function checkIframeLoaded() {
+        iframeLoadAttempts++;
+        var iframe = document.getElementById('appIframe');
+        if (!iframe) return;
+        
+        // Cek apakah iframe kosong (Chrome Android kadang gagal load)
+        try {
+            var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+            if (!iframeDoc || iframeDoc.body.innerHTML.length < 100) {
+                if (iframeLoadAttempts < maxIframeAttempts) {
+                    console.log('🔄 Iframe kosong, retry ke-' + iframeLoadAttempts);
+                    var src = iframe.src;
+                    iframe.src = 'about:blank';
+                    setTimeout(function() { iframe.src = src; }, 300);
+                    setTimeout(checkIframeLoaded, 3000);
+                } else {
+                    console.warn('⚠️ Iframe gagal load setelah ' + maxIframeAttempts + ' percobaan');
+                }
+            } else {
+                console.log('✅ Iframe loaded dengan konten (' + iframeDoc.body.innerHTML.length + ' bytes)');
+            }
+        } catch(e) {
+            // Cross-origin error = normal (iframe dari domain lain)
+            console.log('✅ Iframe cross-origin loaded (tidak bisa diakses, tapi jalan)');
+        }
+    }
+    
+    // Cek setelah 8 detik (konservatif)
+    setTimeout(checkIframeLoaded, 8000);
+    
+    // 5. Handle Android Chrome back button — supaya tidak keluar app
+    window.addEventListener('popstate', function(e) {
+        var iframe = document.getElementById('appIframe');
+        if (iframe && iframe.contentWindow) {
+            try {
+                iframe.contentWindow.history.back();
+                history.pushState(null, '', window.location.href);
+            } catch(e) {}
+        }
+    });
+    history.pushState(null, '', window.location.href);
   </script>
 </body>
 </html>
