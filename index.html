@@ -87,19 +87,12 @@
       --accent: #7C3AED;
       --accent-pink: #EC4899;
       --bg: #0A0E1A;
-      --bg-light: #F8FAFC;
       --surface: #FFFFFF;
       --text: #0F172A;
       --text-muted: #64748B;
       --success: #10B981;
       --danger: #EF4444;
       --gradient-1: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #EC4899 100%);
-      --gradient-2: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
-      --gradient-3: linear-gradient(135deg, #F093FB 0%, #F5576C 100%);
-      --gradient-4: linear-gradient(135deg, #4FACFE 0%, #00F2FE 100%);
-      --shadow-glow: 0 0 60px rgba(79, 70, 229, 0.4);
-      --shadow-md: 0 10px 40px rgba(0,0,0,0.08);
-      --shadow-lg: 0 20px 60px rgba(0,0,0,0.15);
       --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
 
@@ -131,7 +124,7 @@
     }
 
     /* ============================================================
-       SPLASH SCREEN — MODERN VERSION
+       SPLASH SCREEN — MODERN
        ============================================================ */
     #splash-screen {
       position: fixed;
@@ -148,7 +141,6 @@
       overflow: hidden;
     }
 
-    /* Animated Background */
     #splash-screen::before {
       content: '';
       position: absolute;
@@ -165,7 +157,6 @@
       50% { opacity: 1; transform: scale(1.1); }
     }
 
-    /* Floating Particles */
     #splash-screen::after {
       content: '';
       position: absolute;
@@ -215,7 +206,6 @@
       to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    /* Logo with Glow */
     .splash-logo-wrapper {
       position: relative;
       margin-bottom: 24px;
@@ -290,7 +280,6 @@
       letter-spacing: 0.5px;
     }
 
-    /* Circular Progress */
     .progress-circle-wrapper {
       position: relative;
       width: 80px;
@@ -431,7 +420,7 @@
     }
 
     /* ============================================================
-       INSTALL BUTTON — FLOATING PILL
+       INSTALL BUTTON
        ============================================================ */
     #btnInstall {
       display: none;
@@ -545,7 +534,6 @@
 
   <!-- SPLASH SCREEN -->
   <div id="splash-screen">
-    <!-- SVG Gradient Definition -->
     <svg width="0" height="0" style="position:absolute;">
       <defs>
         <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -601,15 +589,24 @@
 
   <script>
     // ============================================================
-    // SPLASH SCREEN — MODERN VERSION
+    // SPLASH SCREEN — MODERN VERSION (DURASI CUSTOM)
+    // ⏱️ UBAH DURASI DI 3 BARIS PALING ATAS
     // ============================================================
     (function() {
+      // ⏱️ KONFIGURASI DURASI — Ubah di sini
+      var SPLASH_MIN_DURATION = 4000;      // Minimum 4 detik (WAJIB tampil)
+      var SPLASH_DELAY_AFTER_LOAD = 1500;  // Delay 1.5 detik setelah iframe load
+      var SPLASH_MAX_DURATION = 15000;     // Maximum 15 detik (force hide)
+      var SPLASH_MSG_INTERVAL = 2000;      // Ganti pesan setiap 2 detik
+
       var splashScreen = document.getElementById('splash-screen');
       var iframe = document.getElementById('appIframe');
       var loadingText = document.getElementById('loadingText');
       var progressCircle = document.getElementById('progressCircle');
       var progressPercent = document.getElementById('progressPercent');
       var splashHidden = false;
+      var splashStartTime = Date.now();
+      var iframeLoaded = false;
       var loadTimeoutId = null;
       var progressInterval = null;
       var messageInterval = null;
@@ -627,8 +624,19 @@
         }
       }
 
-      function hideSplash() {
+      function hideSplash(force) {
         if (splashHidden) return;
+        
+        var elapsed = Date.now() - splashStartTime;
+        var remaining = SPLASH_MIN_DURATION - elapsed;
+        
+        // ✅ Kalau belum mencapai minimum duration, tunda
+        if (!force && remaining > 0) {
+          console.log('⏱️ Splash minimum belum tercapai, tunggu ' + Math.round(remaining/1000) + ' detik lagi');
+          setTimeout(function() { hideSplash(true); }, remaining);
+          return;
+        }
+        
         splashHidden = true;
         
         clearInterval(messageInterval);
@@ -640,35 +648,51 @@
         
         if (iframe) iframe.classList.add('loaded');
         
-        splashScreen.classList.add('fade-out');
         setTimeout(function() {
-          splashScreen.classList.add('hide-complete');
-          splashScreen.style.display = 'none';
-        }, 600);
+          splashScreen.classList.add('fade-out');
+          setTimeout(function() {
+            splashScreen.classList.add('hide-complete');
+            splashScreen.style.display = 'none';
+          }, 600);
+        }, 300);
+        
+        console.log('✅ Splash hidden after ' + Math.round(elapsed/1000) + ' detik');
       }
 
       if (iframe) {
         iframe.addEventListener('load', function() {
+          iframeLoaded = true;
+          console.log('✅ Iframe loaded, tunggu delay tambahan...');
+          
           clearInterval(progressInterval);
-          updateProgress(100);
-          if (loadingText) loadingText.textContent = 'Siap!';
-          setTimeout(hideSplash, 500);
+          
+          // ✅ Set progress ke 95% dulu (belum 100%)
+          if (currentProgress < 95) updateProgress(95);
+          
+          // ✅ Tunggu SPLASH_DELAY_AFTER_LOAD sebelum hide
+          setTimeout(function() {
+            updateProgress(100);
+            if (loadingText) loadingText.textContent = 'Siap!';
+            setTimeout(hideSplash, 500);
+          }, SPLASH_DELAY_AFTER_LOAD);
         });
 
         iframe.addEventListener('error', function() {
           clearInterval(messageInterval);
           clearInterval(progressInterval);
           if (loadingText) loadingText.textContent = 'Gagal memuat, coba refresh';
-          setTimeout(hideSplash, 1500);
+          setTimeout(function() { hideSplash(true); }, 2000);
         });
       }
 
-      // Animated loading messages
+      // ✅ Loading messages — tampil bergantian
       var loadingMessages = [
         'Memuat aplikasi',
         'Menyiapkan data',
         'Menghubungkan server',
-        'Hampir selesai'
+        'Memuat konfigurasi',
+        'Hampir selesai',
+        'Menyiapkan tampilan'
       ];
       var messageIndex = 0;
 
@@ -676,25 +700,30 @@
         if (splashHidden) return;
         messageIndex = (messageIndex + 1) % loadingMessages.length;
         if (loadingText) loadingText.textContent = loadingMessages[messageIndex];
-      }, 2000);
+      }, SPLASH_MSG_INTERVAL);
 
-      // Simulated progress
+      // ✅ Progress animation — smooth sampai 90%
       progressInterval = setInterval(function() {
         if (splashHidden) { clearInterval(progressInterval); return; }
-        if (currentProgress < 90) {
-          var increment = Math.random() * 8 + 2;
-          updateProgress(currentProgress + increment);
+        
+        // Hitung progress berdasarkan waktu (lebih smooth)
+        var elapsed = Date.now() - splashStartTime;
+        var targetProgress = Math.min(90, (elapsed / SPLASH_MIN_DURATION) * 90);
+        
+        // Hanya update kalau lebih besar dari current
+        if (targetProgress > currentProgress) {
+          updateProgress(targetProgress);
         }
-      }, 250);
+      }, 200);
 
-      // Force hide after 10 seconds
+      // ✅ Force hide setelah MAX duration
       loadTimeoutId = setTimeout(function() {
         if (!splashHidden) {
-          console.warn('Splash timeout, force hide');
+          console.warn('⏰ Splash timeout, force hide');
           if (iframe) iframe.classList.add('loaded');
-          hideSplash();
+          hideSplash(true);
         }
-      }, 10000);
+      }, SPLASH_MAX_DURATION);
 
       window.hideSplash = hideSplash;
     })();
@@ -754,56 +783,56 @@
     // CHROME ANDROID FIXES
     // ============================================================
     setTimeout(function() {
-        var iframe = document.getElementById('appIframe');
-        if (iframe && !iframe.dataset.reloaded) {
-            iframe.dataset.reloaded = '1';
-            var originalSrc = iframe.src;
-            iframe.src = 'about:blank';
-            setTimeout(function() { iframe.src = originalSrc; }, 100);
-        }
+      var iframe = document.getElementById('appIframe');
+      if (iframe && !iframe.dataset.reloaded) {
+        iframe.dataset.reloaded = '1';
+        var originalSrc = iframe.src;
+        iframe.src = 'about:blank';
+        setTimeout(function() { iframe.src = originalSrc; }, 100);
+      }
     }, 500);
 
     if (document.requestStorageAccess) {
-        document.requestStorageAccess().then(function() {
-            console.log('✅ Storage access granted');
-        }).catch(function(err) {
-            console.log('⚠️ Storage access denied:', err.message);
-        });
+      document.requestStorageAccess().then(function() {
+        console.log('✅ Storage access granted');
+      }).catch(function(err) {
+        console.log('⚠️ Storage access denied:', err.message);
+      });
     }
 
     var iframeLoadAttempts = 0;
     var maxIframeAttempts = 3;
     
     function checkIframeLoaded() {
-        iframeLoadAttempts++;
-        var iframe = document.getElementById('appIframe');
-        if (!iframe) return;
-        
-        try {
-            var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-            if (!iframeDoc || iframeDoc.body.innerHTML.length < 100) {
-                if (iframeLoadAttempts < maxIframeAttempts) {
-                    var src = iframe.src;
-                    iframe.src = 'about:blank';
-                    setTimeout(function() { iframe.src = src; }, 300);
-                    setTimeout(checkIframeLoaded, 3000);
-                }
-            }
-        } catch(e) {
-            // Cross-origin = normal
+      iframeLoadAttempts++;
+      var iframe = document.getElementById('appIframe');
+      if (!iframe) return;
+      
+      try {
+        var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        if (!iframeDoc || iframeDoc.body.innerHTML.length < 100) {
+          if (iframeLoadAttempts < maxIframeAttempts) {
+            var src = iframe.src;
+            iframe.src = 'about:blank';
+            setTimeout(function() { iframe.src = src; }, 300);
+            setTimeout(checkIframeLoaded, 3000);
+          }
         }
+      } catch(e) {
+        // Cross-origin = normal
+      }
     }
     
     setTimeout(checkIframeLoaded, 8000);
     
     window.addEventListener('popstate', function(e) {
-        var iframe = document.getElementById('appIframe');
-        if (iframe && iframe.contentWindow) {
-            try {
-                iframe.contentWindow.history.back();
-                history.pushState(null, '', window.location.href);
-            } catch(e) {}
-        }
+      var iframe = document.getElementById('appIframe');
+      if (iframe && iframe.contentWindow) {
+        try {
+          iframe.contentWindow.history.back();
+          history.pushState(null, '', window.location.href);
+        } catch(e) {}
+      }
     });
     history.pushState(null, '', window.location.href);
   </script>
