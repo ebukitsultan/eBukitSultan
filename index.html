@@ -729,30 +729,6 @@
     })();
 
     // ============================================================
-    // FULLSCREEN
-    // ============================================================
-    function requestFullscreen(element) {
-      if (!element) return;
-      try {
-        if (element.requestFullscreen) element.requestFullscreen();
-        else if (element.webkitRequestFullscreen) element.webkitRequestFullscreen();
-      } catch (err) {}
-    }
-
-    var fullscreenAttempted = false;
-    function attemptFullscreen() {
-      if (fullscreenAttempted) return;
-      var iframeEl = document.getElementById('appIframe');
-      if (iframeEl && !document.fullscreenElement && !document.webkitFullscreenElement) {
-        fullscreenAttempted = true;
-        requestFullscreen(iframeEl);
-      }
-    }
-    setTimeout(attemptFullscreen, 3000);
-    document.addEventListener('click', attemptFullscreen);
-    document.addEventListener('touchstart', attemptFullscreen);
-
-    // ============================================================
     // INSTALL APP
     // ============================================================
     var deferredPrompt;
