@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
@@ -8,83 +8,56 @@
   <meta http-equiv="Expires" content="0">
   <title>eBukitSultan - Warga Blok B</title>
   
-  <!-- ============================================================
-  PWA MANIFEST
-  ============================================================ -->
+  <!-- PWA MANIFEST -->
   <link rel="manifest" href="manifest.webmanifest">
 
-  <!-- ============================================================
-  META TAGS UNTUK SPLASH SCREEN PWA
-  ============================================================ -->
-  <meta name="theme-color" content="#FFFFFF">
-  <meta name="msapplication-TileColor" content="#FFFFFF">
+  <!-- META TAGS -->
+  <meta name="theme-color" content="#4F46E5">
+  <meta name="msapplication-TileColor" content="#4F46E5">
   <meta name="msapplication-TileImage" content="icons/icon-192.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="eBukitSultan">
   <meta name="description" content="Administrasi Warga Blok B Bukit Sultan">
 
-  <!-- Apple Touch Icon -->
+  <!-- APPLE TOUCH ICON -->
   <link rel="apple-touch-icon" href="icons/icon-192.png">
   <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png">
   <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-192.png">
 
-  <!-- ============================================================
-  SPLASH SCREEN IOS
-  ============================================================ -->
+  <!-- iOS SPLASH SCREENS -->
   <link rel="apple-touch-startup-image" href="icons/splash-750x1334.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)">
-  <link rel="apple-touch-startup-image" href="icons/splash-1242x2208.png" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3)">
   <link rel="apple-touch-startup-image" href="icons/splash-1125x2436.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)">
-  <link rel="apple-touch-startup-image" href="icons/splash-828x1792.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)">
   <link rel="apple-touch-startup-image" href="icons/splash-1170x2532.png" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3)">
   <link rel="apple-touch-startup-image" href="icons/splash-1284x2778.png" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3)">
   <link rel="apple-touch-startup-image" href="icons/splash-1179x2556.png" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3)">
   <link rel="apple-touch-startup-image" href="icons/splash-1536x2048.png" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)">
-  <link rel="apple-touch-startup-image" href="icons/splash-1668x2388.png" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2)">
-  <link rel="apple-touch-startup-image" href="icons/splash-2048x2732.png" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)">
 
-  <!-- ============================================================
-  GOOGLE FONT - INTER
-  ============================================================ -->
+  <!-- FONTS -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-  <!-- ============================================================
-  HAPUS SERVICE WORKER & CACHE
-  ============================================================ -->
+  <!-- CLEANUP SERVICE WORKER & CACHE -->
   <script>
     (function() {
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistrations().then(function(registrations) {
           for (var i = 0; i < registrations.length; i++) {
             registrations[i].unregister();
-            console.log('✅ Service Worker di-unregister');
           }
-        }).catch(function(err) {
-          console.log('⚠️ Gagal unregister Service Worker:', err);
-        });
+        }).catch(function() {});
       }
-
       if ('caches' in window) {
         caches.keys().then(function(names) {
-          for (var i = 0; i < names.length; i++) {
-            caches.delete(names[i]);
-            console.log('✅ Cache dihapus:', names[i]);
-          }
-        }).catch(function(err) {
-          console.log('⚠️ Gagal hapus cache:', err);
-        });
+          for (var i = 0; i < names.length; i++) caches.delete(names[i]);
+        }).catch(function() {});
       }
-
       try {
         sessionStorage.clear();
         var sessionData = localStorage.getItem('ebukitsultan_session');
         localStorage.clear();
-        if (sessionData) {
-          localStorage.setItem('ebukitsultan_session', sessionData);
-        }
-        console.log('✅ Storage dihapus');
+        if (sessionData) localStorage.setItem('ebukitsultan_session', sessionData);
       } catch(e) {}
 
       window.addEventListener('load', function() {
@@ -98,343 +71,507 @@
 
   <style>
     /* ============================================================
-       RESET TOTAL
-    ============================================================ */
+       RESET & BASE
+       ============================================================ */
     * {
-      margin: 0 !important;
-      padding: 0 !important;
-      box-sizing: border-box !important;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --primary: #4F46E5;
+      --primary-light: #6366F1;
+      --primary-dark: #4338CA;
+      --accent: #7C3AED;
+      --accent-pink: #EC4899;
+      --bg: #0A0E1A;
+      --bg-light: #F8FAFC;
+      --surface: #FFFFFF;
+      --text: #0F172A;
+      --text-muted: #64748B;
+      --success: #10B981;
+      --danger: #EF4444;
+      --gradient-1: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #EC4899 100%);
+      --gradient-2: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+      --gradient-3: linear-gradient(135deg, #F093FB 0%, #F5576C 100%);
+      --gradient-4: linear-gradient(135deg, #4FACFE 0%, #00F2FE 100%);
+      --shadow-glow: 0 0 60px rgba(79, 70, 229, 0.4);
+      --shadow-md: 0 10px 40px rgba(0,0,0,0.08);
+      --shadow-lg: 0 20px 60px rgba(0,0,0,0.15);
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
 
     html {
-      width: 100% !important;
-      height: 100% !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      overflow: hidden !important;
-      background: #FFFFFF !important;
-      position: fixed !important;
-      top: 0 !important;
-      left: 0 !important;
-      right: 0 !important;
-      bottom: 0 !important;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #FFFFFF;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
     }
 
     body {
-      width: 100% !important;
-      height: 100% !important;
-      min-height: 100vh !important;
-      min-height: -webkit-fill-available !important;
-      min-height: 100dvh !important;
-      max-height: 100vh !important;
-      max-height: -webkit-fill-available !important;
-      max-height: 100dvh !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      overflow: hidden !important;
-      background: #FFFFFF !important;
-      display: flex !important;
-      justify-content: center !important;
-      align-items: center !important;
-      position: fixed !important;
-      top: 0 !important;
-      left: 0 !important;
-      right: 0 !important;
-      bottom: 0 !important;
+      width: 100%;
+      height: 100%;
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+      min-height: 100dvh;
+      overflow: hidden;
+      background: #FFFFFF;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      font-family: var(--font);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     /* ============================================================
-       SPLASH SCREEN
-    ============================================================ */
+       SPLASH SCREEN — MODERN VERSION
+       ============================================================ */
     #splash-screen {
-      position: fixed !important;
-      top: 0 !important;
-      left: 0 !important;
-      right: 0 !important;
-      bottom: 0 !important;
-      z-index: 9999 !important;
-      background: #FFFFFF !important;
-      display: flex !important;
-      flex-direction: column !important;
-      align-items: center !important;
-      justify-content: center !important;
-      transition: opacity 0.6s ease, transform 0.6s ease !important;
-      opacity: 1 !important;
-      transform: scale(1) !important;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: 9999;
+      background: #0A0E1A;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      opacity: 1;
+      transform: scale(1);
+      overflow: hidden;
+    }
+
+    /* Animated Background */
+    #splash-screen::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(79, 70, 229, 0.4) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(124, 58, 237, 0.4) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(236, 72, 153, 0.2) 0%, transparent 60%);
+      animation: bgPulse 8s ease-in-out infinite;
+    }
+
+    @keyframes bgPulse {
+      0%, 100% { opacity: 0.6; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.1); }
+    }
+
+    /* Floating Particles */
+    #splash-screen::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: 
+        radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,0.3) 0%, transparent 50%),
+        radial-gradient(2px 2px at 60% 70%, rgba(255,255,255,0.2) 0%, transparent 50%),
+        radial-gradient(1px 1px at 40% 80%, rgba(255,255,255,0.4) 0%, transparent 50%),
+        radial-gradient(1px 1px at 80% 20%, rgba(255,255,255,0.3) 0%, transparent 50%),
+        radial-gradient(2px 2px at 10% 60%, rgba(255,255,255,0.25) 0%, transparent 50%),
+        radial-gradient(1px 1px at 90% 90%, rgba(255,255,255,0.3) 0%, transparent 50%);
+      background-size: 200% 200%;
+      animation: particlesFloat 20s ease-in-out infinite;
+      opacity: 0.5;
+    }
+
+    @keyframes particlesFloat {
+      0%, 100% { background-position: 0% 0%; }
+      50% { background-position: 100% 100%; }
     }
 
     #splash-screen.fade-out {
-      opacity: 0 !important;
-      transform: scale(1.08) !important;
-      transition: opacity 0.5s ease, transform 0.5s ease !important;
-      pointer-events: none !important;
+      opacity: 0;
+      transform: scale(1.15);
+      pointer-events: none;
     }
 
     #splash-screen.hide-complete {
-      display: none !important;
+      display: none;
     }
 
     .splash-content {
-      display: flex !important;
-      flex-direction: column !important;
-      align-items: center !important;
-      justify-content: center !important;
-      text-align: center !important;
-      padding: 0 30px !important;
-      animation: splashFadeIn 0.8s ease !important;
-      position: relative !important;
-      min-height: 60vh !important;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 30px;
+      animation: splashFadeIn 1s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      z-index: 10;
+      min-height: 60vh;
     }
 
     @keyframes splashFadeIn {
-      from { opacity: 0; transform: translateY(30px) scale(0.95); }
+      from { opacity: 0; transform: translateY(40px) scale(0.9); }
       to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    .splash-logo {
-      width: 120px !important;
-      height: 120px !important;
-      border-radius: 28px !important;
-      object-fit: cover !important;
-      margin-bottom: 20px !important;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.08) !important;
-      background: #FFFFFF !important;
-      padding: 12px !important;
-      animation: logoPulse 2s ease-in-out infinite !important;
+    /* Logo with Glow */
+    .splash-logo-wrapper {
+      position: relative;
+      margin-bottom: 24px;
     }
 
-    @keyframes logoPulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.04); }
+    .splash-logo-wrapper::before {
+      content: '';
+      position: absolute;
+      inset: -20px;
+      background: radial-gradient(circle, rgba(79, 70, 229, 0.6) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: logoGlow 2.5s ease-in-out infinite;
+      z-index: -1;
+    }
+
+    @keyframes logoGlow {
+      0%, 100% { opacity: 0.5; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    .splash-logo {
+      width: 120px;
+      height: 120px;
+      border-radius: 32px;
+      object-fit: cover;
+      margin: 0 auto;
+      box-shadow: 
+        0 20px 60px rgba(79, 70, 229, 0.4),
+        0 0 0 4px rgba(255,255,255,0.1),
+        inset 0 2px 10px rgba(255,255,255,0.2);
+      background: #FFFFFF;
+      padding: 14px;
+      animation: logoFloat 3s ease-in-out infinite;
+      display: block;
+    }
+
+    @keyframes logoFloat {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(2deg); }
     }
 
     .splash-title {
-      font-family: 'Inter', sans-serif !important;
-      font-size: 32px !important;
-      font-weight: 800 !important;
-      color: #0F172A !important;
-      letter-spacing: -0.5px !important;
-      margin-bottom: 4px !important;
+      font-family: var(--font);
+      font-size: 36px;
+      font-weight: 900;
+      color: #FFFFFF;
+      letter-spacing: -1px;
+      margin-bottom: 8px;
+      line-height: 1.1;
     }
 
     .splash-title span {
-      background: linear-gradient(135deg, #4F46E5, #7C3AED) !important;
-      -webkit-background-clip: text !important;
-      -webkit-text-fill-color: transparent !important;
-      background-clip: text !important;
+      background: linear-gradient(135deg, #818CF8, #C084FC, #F0ABFC);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      background-size: 200% 200%;
+      animation: gradientShift 3s ease infinite;
+    }
+
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
     }
 
     .splash-subtitle {
-      font-family: 'Inter', sans-serif !important;
-      font-size: 14px !important;
-      font-weight: 500 !important;
-      color: #94A3B8 !important;
-      margin-bottom: 28px !important;
-      letter-spacing: 0.3px !important;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 36px;
+      letter-spacing: 0.5px;
     }
 
-    .loading-bar-container {
-      width: 220px !important;
-      max-width: 80% !important;
-      height: 5px !important;
-      background: #E8ECF1 !important;
-      border-radius: 8px !important;
-      overflow: hidden !important;
-      margin-bottom: 14px !important;
+    /* Circular Progress */
+    .progress-circle-wrapper {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      margin-bottom: 20px;
     }
 
-    .loading-bar-progress {
-      height: 100% !important;
-      width: 0% !important;
-      background: linear-gradient(90deg, #4F46E5, #7C3AED, #4F46E5) !important;
-      background-size: 200% 100% !important;
-      border-radius: 8px !important;
-      animation: loadingProgress 2s ease-in-out infinite !important;
-      transition: width 0.5s ease !important;
+    .progress-circle {
+      width: 80px;
+      height: 80px;
+      transform: rotate(-90deg);
     }
 
-    @keyframes loadingProgress {
-      0% { width: 0%; background-position: 200% 0; }
-      50% { width: 75%; background-position: 100% 0; }
-      100% { width: 100%; background-position: 0 0; }
+    .progress-circle-track {
+      fill: none;
+      stroke: rgba(255,255,255,0.1);
+      stroke-width: 6;
+    }
+
+    .progress-circle-progress {
+      fill: none;
+      stroke: url(#progressGradient);
+      stroke-width: 6;
+      stroke-linecap: round;
+      stroke-dasharray: 226;
+      stroke-dashoffset: 226;
+      transition: stroke-dashoffset 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      filter: drop-shadow(0 0 8px rgba(124, 58, 237, 0.8));
+    }
+
+    .progress-percent {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--font);
+      font-size: 18px;
+      font-weight: 800;
+      color: #FFFFFF;
+      letter-spacing: -0.5px;
+    }
+
+    .progress-percent::after {
+      content: '%';
+      font-size: 11px;
+      opacity: 0.6;
+      margin-left: 1px;
     }
 
     .loading-text {
-      font-family: 'Inter', sans-serif !important;
-      font-size: 12px !important;
-      font-weight: 500 !important;
-      color: #94A3B8 !important;
-      letter-spacing: 0.5px !important;
-      min-height: 20px !important;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.7);
+      letter-spacing: 0.3px;
+      min-height: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .loading-text::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #10B981;
+      box-shadow: 0 0 12px #10B981;
+      animation: pulseDot 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(0.7); }
     }
 
     .splash-footer {
-      font-family: 'Inter', sans-serif !important;
-      font-size: 11px !important;
-      font-weight: 500 !important;
-      color: #94A3B8 !important;
-      margin-top: 32px !important;
-      letter-spacing: 0.3px !important;
-      text-align: center !important;
-      width: 100% !important;
-      position: absolute !important;
-      bottom: 30px !important;
-      left: 0 !important;
-      right: 0 !important;
+      font-family: var(--font);
+      font-size: 11px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.4);
+      margin-top: 40px;
+      letter-spacing: 0.5px;
+      text-align: center;
+      width: 100%;
+      position: absolute;
+      bottom: 30px;
+      left: 0; right: 0;
+      z-index: 10;
     }
 
     .splash-footer .heart {
-      color: #EF4444 !important;
-      display: inline-block !important;
-      animation: heartBeat 1.2s ease-in-out infinite !important;
+      color: #EC4899;
+      display: inline-block;
+      animation: heartBeat 1.2s ease-in-out infinite;
+      filter: drop-shadow(0 0 8px rgba(236, 72, 153, 0.8));
     }
 
     @keyframes heartBeat {
       0%, 100% { transform: scale(1); }
-      25% { transform: scale(1.15); }
+      25% { transform: scale(1.3); }
       50% { transform: scale(1); }
-      75% { transform: scale(1.08); }
+      75% { transform: scale(1.15); }
     }
 
     .splash-footer .developer {
-      background: linear-gradient(135deg, #4F46E5, #7C3AED) !important;
-      -webkit-background-clip: text !important;
-      -webkit-text-fill-color: transparent !important;
-      background-clip: text !important;
-      font-weight: 700 !important;
+      background: linear-gradient(135deg, #818CF8, #C084FC);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 800;
+      letter-spacing: 0.8px;
     }
 
     /* ============================================================
-       IFRAME - KE WEB APP
-    ============================================================ */
+       IFRAME
+       ============================================================ */
     #appIframe {
-      width: 100% !important;
-      height: 100% !important;
-      min-height: 100vh !important;
-      min-height: -webkit-fill-available !important;
-      min-height: 100dvh !important;
-      max-height: 100vh !important;
-      max-height: -webkit-fill-available !important;
-      max-height: 100dvh !important;
-      max-width: 100vw !important;
-      border: none !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      display: block !important;
-      position: absolute !important;
-      top: 0 !important;
-      left: 0 !important;
-      right: 0 !important;
-      bottom: 0 !important;
-      background: #F1F5F9 !important;
-      z-index: 1 !important;
-      overflow: hidden !important;
-      opacity: 0 !important;
-      transition: opacity 0.6s ease !important;
-      -webkit-overflow-scrolling: touch !important;
-      overflow: auto !important;
-      -webkit-transform: translateZ(0) !important;
-      transform: translateZ(0) !important;
-      -webkit-backface-visibility: hidden !important;
-      backface-visibility: hidden !important;
+      width: 100%;
+      height: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
+      border: none;
+      display: block;
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #F1F5F9;
+      z-index: 1;
+      opacity: 0;
+      transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+      will-change: opacity;
     }
 
     #appIframe.loaded {
-      opacity: 1 !important;
+      opacity: 1;
     }
 
+    /* ============================================================
+       INSTALL BUTTON — FLOATING PILL
+       ============================================================ */
     #btnInstall {
-      display: none !important;
-      position: fixed !important;
-      bottom: 24px !important;
-      left: 50% !important;
-      transform: translateX(-50%) !important;
-      z-index: 10000 !important;
-      background: linear-gradient(135deg, #4F46E5, #7C3AED) !important;
-      color: white !important;
-      border: none !important;
-      padding: 14px 28px !important;
-      border-radius: 14px !important;
-      font-family: 'Inter', sans-serif !important;
-      font-size: 15px !important;
-      font-weight: 700 !important;
-      cursor: pointer !important;
-      box-shadow: 0 8px 32px rgba(79, 70, 229, 0.35) !important;
-      transition: transform 0.2s ease, box-shadow 0.2s ease !important;
-      letter-spacing: 0.3px !important;
+      display: none;
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10000;
+      background: var(--gradient-1);
+      color: white;
+      border: none;
+      padding: 14px 26px;
+      border-radius: 999px;
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 
+        0 12px 40px rgba(79, 70, 229, 0.5),
+        0 0 0 1px rgba(255,255,255,0.1),
+        inset 0 1px 0 rgba(255,255,255,0.2);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+      letter-spacing: 0.3px;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+      animation: btnFloat 3s ease-in-out infinite;
     }
 
     #btnInstall.show {
-      display: block !important;
-      animation: btnInstallPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+      display: flex;
     }
 
-    @keyframes btnInstallPop {
-      from { opacity: 0; transform: translateX(-50%) scale(0.8) translateY(20px); }
-      to { opacity: 1; transform: translateX(-50%) scale(1) translateY(0); }
+    #btnInstall::before {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 999px;
+      background: var(--gradient-1);
+      opacity: 0.4;
+      filter: blur(12px);
+      z-index: -1;
+      animation: btnGlow 2s ease-in-out infinite;
+    }
+
+    @keyframes btnGlow {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.05); }
+    }
+
+    @keyframes btnFloat {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-4px); }
+    }
+
+    #btnInstall:active {
+      transform: translateX(-50%) scale(0.95);
     }
 
     /* ============================================================
        RESPONSIVE
-    ============================================================ */
-    @media (orientation: portrait) and (max-width: 480px) {
-      .splash-logo { width: 90px !important; height: 90px !important; padding: 10px !important; }
-      .splash-title { font-size: 26px !important; }
-      .splash-subtitle { font-size: 12px !important; margin-bottom: 20px !important; }
-      .loading-bar-container { width: 180px !important; }
-      .splash-footer { font-size: 10px !important; bottom: 20px !important; }
+       ============================================================ */
+    @media (max-width: 480px) {
+      .splash-logo { width: 100px; height: 100px; padding: 12px; border-radius: 26px; }
+      .splash-title { font-size: 30px; }
+      .splash-subtitle { font-size: 12px; }
+      .progress-circle-wrapper,
+      .progress-circle { width: 70px; height: 70px; }
+      .progress-circle-progress { stroke-dasharray: 198; stroke-dashoffset: 198; }
+      .progress-percent { font-size: 16px; }
+      .splash-footer { font-size: 10px; bottom: 24px; }
     }
 
     @media (min-width: 769px) {
       body {
-        background: linear-gradient(135deg, #E8ECF1 0%, #D1D5DB 100%) !important;
-        padding: 24px !important;
-        align-items: center !important;
-        justify-content: center !important;
-        position: relative !important;
+        background: linear-gradient(135deg, #0A0E1A 0%, #1E1B4B 50%, #312E81 100%);
+        padding: 24px;
+        align-items: center;
+        justify-content: center;
+        position: relative;
       }
       #appIframe {
-        max-width: 480px !important;
-        border-radius: 24px !important;
-        box-shadow: 0 20px 80px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,255,255,0.1) !important;
-        position: relative !important;
-        height: 90vh !important;
-        min-height: 600px !important;
-        max-height: 95vh !important;
+        max-width: 480px;
+        border-radius: 28px;
+        box-shadow: 
+          0 40px 120px rgba(0,0,0,0.4),
+          0 0 0 1px rgba(255,255,255,0.05),
+          inset 0 1px 0 rgba(255,255,255,0.1);
+        position: relative;
+        height: 90vh;
+        min-height: 600px;
+        max-height: 95vh;
       }
-      .splash-logo { width: 140px !important; height: 140px !important; padding: 16px !important; }
+      .splash-logo { width: 140px; height: 140px; padding: 18px; }
+      .splash-title { font-size: 42px; }
     }
 
-    @media (prefers-color-scheme: dark) {
-      #splash-screen { background: #0F172A !important; }
-      .splash-title { color: #F1F5F9 !important; }
-      .splash-subtitle { color: #94A3B8 !important; }
-      .splash-footer { color: #64748B !important; }
-      .loading-bar-container { background: #1E293B !important; }
-      .splash-logo { background: #1E293B !important; }
-      body { background: #0F172A !important; }
-      #appIframe { background: #0F172A !important; }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
     }
 
-    ::-webkit-scrollbar { display: none !important; }
-    * { scrollbar-width: none !important; -ms-overflow-style: none !important; }
+    ::-webkit-scrollbar { display: none; }
+    * { scrollbar-width: none; -ms-overflow-style: none; }
   </style>
 </head>
 <body>
 
-  <!-- ============================================================
-  SPLASH SCREEN
-  ============================================================ -->
+  <!-- SPLASH SCREEN -->
   <div id="splash-screen">
+    <!-- SVG Gradient Definition -->
+    <svg width="0" height="0" style="position:absolute;">
+      <defs>
+        <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#4F46E5"/>
+          <stop offset="50%" stop-color="#7C3AED"/>
+          <stop offset="100%" stop-color="#EC4899"/>
+        </linearGradient>
+      </defs>
+    </svg>
+
     <div class="splash-content">
-      <img src="icons/icon-512.png" class="splash-logo" alt="eBukitSultan Logo" id="splashLogo" onerror="this.src='https://lh3.googleusercontent.com/d/1t8_cVCIU7gPwWKpLTStCd99soJBKkrMc'">
+      <div class="splash-logo-wrapper">
+        <img src="icons/icon-512.png" class="splash-logo" alt="eBukitSultan Logo" id="splashLogo" onerror="this.src='https://lh3.googleusercontent.com/d/1t8_cVCIU7gPwWKpLTStCd99soJBKkrMc'">
+      </div>
       <div class="splash-title">eBukit<span>Sultan</span></div>
       <div class="splash-subtitle">Amanah Dalam Kelola · Transparan Dalam Data</div>
       
-      <div class="loading-bar-container">
-        <div class="loading-bar-progress" id="loadingProgress"></div>
+      <div class="progress-circle-wrapper">
+        <svg class="progress-circle" viewBox="0 0 80 80">
+          <circle class="progress-circle-track" cx="40" cy="40" r="36"></circle>
+          <circle class="progress-circle-progress" id="progressCircle" cx="40" cy="40" r="36"></circle>
+        </svg>
+        <div class="progress-percent" id="progressPercent">0</div>
       </div>
-      <div class="loading-text" id="loadingText">⏳ Memuat aplikasi...</div>
+      
+      <div class="loading-text" id="loadingText">Memuat aplikasi</div>
       
       <div class="splash-footer">
         Developed With <span class="heart">❤️</span> By <span class="developer">AF-AHFZB2NO2</span>
@@ -442,44 +579,53 @@
     </div>
   </div>
 
-<!-- ============================================================
-IFRAME - VERSI FIXED UNTUK CHROME ANDROID
-- Tambah allow="storage-access" untuk akses cookie
-- Tambah allow-top-navigation
-- Tambah allow-popups-to-escape-sandbox
-============================================================ -->
-<iframe 
-    id="appIframe"
-    src="https://script.google.com/macros/s/AKfycby2W6MMx5FJtrF93U2tRx4qSFaxnryn6itkVXE8X1wAd1FryDw9hj2gCDSy726L3gKrog/exec"
-    allowfullscreen="true"
-    loading="eager"
-    scrolling="yes"
-    allow="cross-origin-isolated; storage-access; clipboard-write; camera; microphone; geolocation"
-    referrerpolicy="no-referrer-when-downgrade"
-    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads allow-storage-access-by-user-activation allow-top-navigation allow-top-navigation-by-user-activation allow-popups-to-escape-sandbox allow-presentation allow-orientation-lock"
-    style="width:100%; height:100%; border:none; position:absolute; top:0; left:0;"
-    title="eBukitSultan App"
->
-</iframe>
+  <!-- IFRAME -->
+  <iframe 
+      id="appIframe"
+      src="https://script.google.com/macros/s/AKfycby2W6MMx5FJtrF93U2tRx4qSFaxnryn6itkVXE8X1wAd1FryDw9hj2gCDSy726L3gKrog/exec"
+      allowfullscreen="true"
+      loading="eager"
+      scrolling="yes"
+      allow="cross-origin-isolated; storage-access; clipboard-write; camera; microphone; geolocation"
+      referrerpolicy="no-referrer-when-downgrade"
+      sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads allow-storage-access-by-user-activation allow-top-navigation allow-top-navigation-by-user-activation allow-popups-to-escape-sandbox allow-presentation allow-orientation-lock"
+      style="width:100%; height:100%; border:none;"
+      title="eBukitSultan App"
+  ></iframe>
 
-  <!-- ============================================================
-  BUTTON INSTALL
-  ============================================================ -->
-  <button id="btnInstall" onclick="installApp()">📲 Install Aplikasi</button>
+  <!-- INSTALL BUTTON -->
+  <button id="btnInstall" onclick="installApp()">
+    <span>📲</span>
+    <span>Install Aplikasi</span>
+  </button>
 
   <script>
     // ============================================================
-    // SPLASH SCREEN - HIDE AFTER IFRAME LOAD
+    // SPLASH SCREEN — MODERN VERSION
     // ============================================================
     (function() {
       var splashScreen = document.getElementById('splash-screen');
       var iframe = document.getElementById('appIframe');
       var loadingText = document.getElementById('loadingText');
-      var loadingProgress = document.getElementById('loadingProgress');
+      var progressCircle = document.getElementById('progressCircle');
+      var progressPercent = document.getElementById('progressPercent');
       var splashHidden = false;
       var loadTimeoutId = null;
       var progressInterval = null;
       var messageInterval = null;
+      var currentProgress = 0;
+      var CIRCLE_LENGTH = 226; // 2 * PI * 36
+
+      function updateProgress(percent) {
+        currentProgress = Math.min(percent, 100);
+        if (progressCircle) {
+          var offset = CIRCLE_LENGTH - (CIRCLE_LENGTH * currentProgress / 100);
+          progressCircle.style.strokeDashoffset = offset;
+        }
+        if (progressPercent) {
+          progressPercent.textContent = Math.round(currentProgress);
+        }
+      }
 
       function hideSplash() {
         if (splashHidden) return;
@@ -489,8 +635,8 @@ IFRAME - VERSI FIXED UNTUK CHROME ANDROID
         clearInterval(progressInterval);
         clearTimeout(loadTimeoutId);
         
-        if (loadingText) loadingText.textContent = '✅ Selesai!';
-        if (loadingProgress) loadingProgress.style.width = '100%';
+        updateProgress(100);
+        if (loadingText) loadingText.textContent = 'Siap!';
         
         if (iframe) iframe.classList.add('loaded');
         
@@ -504,46 +650,52 @@ IFRAME - VERSI FIXED UNTUK CHROME ANDROID
       if (iframe) {
         iframe.addEventListener('load', function() {
           clearInterval(progressInterval);
-          if (loadingProgress) loadingProgress.style.width = '100%';
-          if (loadingText) loadingText.textContent = '✅ Selesai!';
-          setTimeout(hideSplash, 400);
+          updateProgress(100);
+          if (loadingText) loadingText.textContent = 'Siap!';
+          setTimeout(hideSplash, 500);
         });
 
         iframe.addEventListener('error', function() {
           clearInterval(messageInterval);
           clearInterval(progressInterval);
-          if (loadingText) loadingText.textContent = '❌ Gagal memuat, coba refresh';
+          if (loadingText) loadingText.textContent = 'Gagal memuat, coba refresh';
           setTimeout(hideSplash, 1500);
         });
       }
 
-      var loadingMessages = ['⏳ Memuat aplikasi...', '⚡ Menyiapkan data...', '🚀 Hampir selesai...'];
+      // Animated loading messages
+      var loadingMessages = [
+        'Memuat aplikasi',
+        'Menyiapkan data',
+        'Menghubungkan server',
+        'Hampir selesai'
+      ];
       var messageIndex = 0;
 
       messageInterval = setInterval(function() {
         if (splashHidden) return;
         messageIndex = (messageIndex + 1) % loadingMessages.length;
         if (loadingText) loadingText.textContent = loadingMessages[messageIndex];
-      }, 2500);
+      }, 2000);
 
-      var progress = 0;
+      // Simulated progress
       progressInterval = setInterval(function() {
         if (splashHidden) { clearInterval(progressInterval); return; }
-        progress = Math.min(progress + Math.random() * 6 + 1, 92);
-        if (loadingProgress) loadingProgress.style.width = progress + '%';
-      }, 300);
+        if (currentProgress < 90) {
+          var increment = Math.random() * 8 + 2;
+          updateProgress(currentProgress + increment);
+        }
+      }, 250);
 
+      // Force hide after 10 seconds
       loadTimeoutId = setTimeout(function() {
         if (!splashHidden) {
-          console.warn('⏰ Splash timeout, force hide');
+          console.warn('Splash timeout, force hide');
           if (iframe) iframe.classList.add('loaded');
           hideSplash();
         }
       }, 10000);
 
-      console.log('✅ eBukitSultan wrapper loaded');
-      console.log('🔄 Iframe URL: ' + (iframe ? iframe.src : 'No iframe'));
-      
       window.hideSplash = hideSplash;
     })();
 
@@ -553,18 +705,12 @@ IFRAME - VERSI FIXED UNTUK CHROME ANDROID
     function requestFullscreen(element) {
       if (!element) return;
       try {
-        if (element.requestFullscreen) {
-          element.requestFullscreen();
-        } else if (element.webkitRequestFullscreen) {
-          element.webkitRequestFullscreen();
-        }
-      } catch (err) {
-        console.log('Fullscreen tidak diizinkan:', err.message);
-      }
+        if (element.requestFullscreen) element.requestFullscreen();
+        else if (element.webkitRequestFullscreen) element.webkitRequestFullscreen();
+      } catch (err) {}
     }
 
     var fullscreenAttempted = false;
-
     function attemptFullscreen() {
       if (fullscreenAttempted) return;
       var iframeEl = document.getElementById('appIframe');
@@ -573,10 +719,9 @@ IFRAME - VERSI FIXED UNTUK CHROME ANDROID
         requestFullscreen(iframeEl);
       }
     }
-
-    setTimeout(function() { attemptFullscreen(); }, 3000);
-    document.addEventListener('click', function() { attemptFullscreen(); });
-    document.addEventListener('touchstart', function() { attemptFullscreen(); });
+    setTimeout(attemptFullscreen, 3000);
+    document.addEventListener('click', attemptFullscreen);
+    document.addEventListener('touchstart', attemptFullscreen);
 
     // ============================================================
     // INSTALL APP
@@ -593,69 +738,39 @@ IFRAME - VERSI FIXED UNTUK CHROME ANDROID
     window.addEventListener('appinstalled', function() {
       var btn = document.getElementById('btnInstall');
       if (btn) btn.classList.remove('show');
-      console.log('✅ Aplikasi berhasil diinstall');
     });
 
     function installApp() {
       if (!deferredPrompt) return;
       deferredPrompt.prompt();
       deferredPrompt.userChoice.then(function(result) {
-        if (result.outcome === 'accepted') {
-          console.log('✅ Aplikasi berhasil diinstall');
-        } else {
-          console.log('❌ Pengguna membatalkan install');
-        }
         deferredPrompt = null;
         var btn = document.getElementById('btnInstall');
         if (btn) btn.classList.remove('show');
       });
     }
 
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then(function(registrations) {
-        for (var i = 0; i < registrations.length; i++) {
-          registrations[i].unregister();
-          console.log('✅ Service Worker di-unregister di awal');
-        }
-      }).catch(function(err) {
-        console.log('⚠️ Gagal unregister Service Worker:', err);
-      });
-    }
-
-        // ============================================================
-    // FIX KHUSUS CHROME ANDROID
     // ============================================================
-    
-    // 1. Force iframe reload setelah 500ms (bantu cookie sync di Chrome Android)
+    // CHROME ANDROID FIXES
+    // ============================================================
     setTimeout(function() {
         var iframe = document.getElementById('appIframe');
         if (iframe && !iframe.dataset.reloaded) {
             iframe.dataset.reloaded = '1';
-            // Reload iframe sekali untuk trigger cookie storage di Chrome Android
             var originalSrc = iframe.src;
             iframe.src = 'about:blank';
-            setTimeout(function() {
-                iframe.src = originalSrc;
-            }, 100);
+            setTimeout(function() { iframe.src = originalSrc; }, 100);
         }
     }, 500);
 
-    // 2. Request Storage Access API (kalau didukung Chrome Android)
     if (document.requestStorageAccess) {
         document.requestStorageAccess().then(function() {
             console.log('✅ Storage access granted');
         }).catch(function(err) {
-            console.log('⚠️ Storage access denied (Chrome Android mungkin block):', err.message);
+            console.log('⚠️ Storage access denied:', err.message);
         });
     }
 
-    // 3. Deteksi Chrome Android dan log
-    var isChromeAndroid = /Android/.test(navigator.userAgent) && /Chrome/.test(navigator.userAgent);
-    if (isChromeAndroid) {
-        console.log('📱 Chrome Android terdeteksi — pakai cookie workaround');
-    }
-
-    // 4. Retry load iframe kalau timeout (Chrome Android kadang lambat)
     var iframeLoadAttempts = 0;
     var maxIframeAttempts = 3;
     
@@ -664,32 +779,23 @@ IFRAME - VERSI FIXED UNTUK CHROME ANDROID
         var iframe = document.getElementById('appIframe');
         if (!iframe) return;
         
-        // Cek apakah iframe kosong (Chrome Android kadang gagal load)
         try {
             var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
             if (!iframeDoc || iframeDoc.body.innerHTML.length < 100) {
                 if (iframeLoadAttempts < maxIframeAttempts) {
-                    console.log('🔄 Iframe kosong, retry ke-' + iframeLoadAttempts);
                     var src = iframe.src;
                     iframe.src = 'about:blank';
                     setTimeout(function() { iframe.src = src; }, 300);
                     setTimeout(checkIframeLoaded, 3000);
-                } else {
-                    console.warn('⚠️ Iframe gagal load setelah ' + maxIframeAttempts + ' percobaan');
                 }
-            } else {
-                console.log('✅ Iframe loaded dengan konten (' + iframeDoc.body.innerHTML.length + ' bytes)');
             }
         } catch(e) {
-            // Cross-origin error = normal (iframe dari domain lain)
-            console.log('✅ Iframe cross-origin loaded (tidak bisa diakses, tapi jalan)');
+            // Cross-origin = normal
         }
     }
     
-    // Cek setelah 8 detik (konservatif)
     setTimeout(checkIframeLoaded, 8000);
     
-    // 5. Handle Android Chrome back button — supaya tidak keluar app
     window.addEventListener('popstate', function(e) {
         var iframe = document.getElementById('appIframe');
         if (iframe && iframe.contentWindow) {
