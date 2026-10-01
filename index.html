@@ -7,11 +7,8 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <title>eBukitSultan - Warga Blok B</title>
-  
-  <!-- PWA MANIFEST -->
-  <link rel="manifest" href="manifest.webmanifest">
 
-  <!-- META TAGS -->
+  <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#4F46E5">
   <meta name="msapplication-TileColor" content="#4F46E5">
   <meta name="msapplication-TileImage" content="icons/icon-192.png">
@@ -20,12 +17,10 @@
   <meta name="apple-mobile-web-app-title" content="eBukitSultan">
   <meta name="description" content="Administrasi Warga Blok B Bukit Sultan">
 
-  <!-- APPLE TOUCH ICON -->
   <link rel="apple-touch-icon" href="icons/icon-192.png">
   <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png">
   <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-192.png">
 
-  <!-- iOS SPLASH SCREENS -->
   <link rel="apple-touch-startup-image" href="icons/splash-750x1334.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)">
   <link rel="apple-touch-startup-image" href="icons/splash-1125x2436.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)">
   <link rel="apple-touch-startup-image" href="icons/splash-1170x2532.png" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3)">
@@ -33,46 +28,11 @@
   <link rel="apple-touch-startup-image" href="icons/splash-1179x2556.png" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3)">
   <link rel="apple-touch-startup-image" href="icons/splash-1536x2048.png" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)">
 
-  <!-- FONTS -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-  <!-- CLEANUP SERVICE WORKER & CACHE -->
-  <script>
-    (function() {
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function(registrations) {
-          for (var i = 0; i < registrations.length; i++) {
-            registrations[i].unregister();
-          }
-        }).catch(function() {});
-      }
-      if ('caches' in window) {
-        caches.keys().then(function(names) {
-          for (var i = 0; i < names.length; i++) caches.delete(names[i]);
-        }).catch(function() {});
-      }
-      try {
-        sessionStorage.clear();
-        var sessionData = localStorage.getItem('ebukitsultan_session');
-        localStorage.clear();
-        if (sessionData) localStorage.setItem('ebukitsultan_session', sessionData);
-      } catch(e) {}
-
-      window.addEventListener('load', function() {
-        var perfEntries = performance.getEntriesByType('navigation');
-        if (perfEntries.length > 0 && perfEntries[0].type === 'back_forward') {
-          location.reload(true);
-        }
-      });
-    })();
-  </script>
-
   <style>
-    /* ============================================================
-       RESET & BASE
-       ============================================================ */
     * {
       margin: 0;
       padding: 0;
@@ -96,91 +56,57 @@
       --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
 
-    html {
+    html, body {
       width: 100%;
       height: 100%;
-      overflow: hidden;
+      margin: 0;
       background: #FFFFFF;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
+      overflow: hidden;
+      position: relative;
     }
 
     body {
-      width: 100%;
-      height: 100%;
-      min-height: 100vh;
-      min-height: -webkit-fill-available;
-      min-height: 100dvh;
-      overflow: hidden;
-      background: #FFFFFF;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
       font-family: var(--font);
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
-    /* ============================================================
-       SPLASH SCREEN — MODERN
-       ============================================================ */
     #splash-screen {
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
+      inset: 0;
       z-index: 9999;
       background: #0A0E1A;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
       opacity: 1;
-      transform: scale(1);
+      transition: opacity 0.5s ease, transform 0.5s ease;
       overflow: hidden;
+      will-change: opacity, transform;
     }
 
     #splash-screen::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: 
-        radial-gradient(circle at 20% 30%, rgba(79, 70, 229, 0.4) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(124, 58, 237, 0.4) 0%, transparent 50%),
-        radial-gradient(circle at 50% 50%, rgba(236, 72, 153, 0.2) 0%, transparent 60%);
+      background:
+        radial-gradient(circle at 20% 30%, rgba(79,70,229,0.34), transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(124,58,237,0.25), transparent 40%);
       animation: bgPulse 8s ease-in-out infinite;
     }
 
     @keyframes bgPulse {
-      0%, 100% { opacity: 0.6; transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.1); }
-    }
-
-    #splash-screen::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image: 
-        radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,0.3) 0%, transparent 50%),
-        radial-gradient(2px 2px at 60% 70%, rgba(255,255,255,0.2) 0%, transparent 50%),
-        radial-gradient(1px 1px at 40% 80%, rgba(255,255,255,0.4) 0%, transparent 50%),
-        radial-gradient(1px 1px at 80% 20%, rgba(255,255,255,0.3) 0%, transparent 50%),
-        radial-gradient(2px 2px at 10% 60%, rgba(255,255,255,0.25) 0%, transparent 50%),
-        radial-gradient(1px 1px at 90% 90%, rgba(255,255,255,0.3) 0%, transparent 50%);
-      background-size: 200% 200%;
-      animation: particlesFloat 20s ease-in-out infinite;
-      opacity: 0.5;
-    }
-
-    @keyframes particlesFloat {
-      0%, 100% { background-position: 0% 0%; }
-      50% { background-position: 100% 100%; }
+      0%, 100% { opacity: 0.75; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.08); }
     }
 
     #splash-screen.fade-out {
       opacity: 0;
-      transform: scale(1.15);
+      transform: scale(1.05);
       pointer-events: none;
     }
 
@@ -189,70 +115,47 @@
     }
 
     .splash-content {
+      position: relative;
+      z-index: 2;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 0 30px;
-      animation: splashFadeIn 1s cubic-bezier(0.16, 1, 0.3, 1);
-      position: relative;
-      z-index: 10;
+      padding: 0 24px;
       min-height: 60vh;
-    }
-
-    @keyframes splashFadeIn {
-      from { opacity: 0; transform: translateY(40px) scale(0.9); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     .splash-logo-wrapper {
       position: relative;
-      margin-bottom: 24px;
-    }
-
-    .splash-logo-wrapper::before {
-      content: '';
-      position: absolute;
-      inset: -20px;
-      background: radial-gradient(circle, rgba(79, 70, 229, 0.6) 0%, transparent 70%);
-      border-radius: 50%;
-      animation: logoGlow 2.5s ease-in-out infinite;
-      z-index: -1;
-    }
-
-    @keyframes logoGlow {
-      0%, 100% { opacity: 0.5; transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.2); }
+      margin-bottom: 22px;
     }
 
     .splash-logo {
-      width: 120px;
-      height: 120px;
-      border-radius: 32px;
+      width: 118px;
+      height: 118px;
+      border-radius: 30px;
       object-fit: cover;
-      margin: 0 auto;
-      box-shadow: 
-        0 20px 60px rgba(79, 70, 229, 0.4),
-        0 0 0 4px rgba(255,255,255,0.1),
-        inset 0 2px 10px rgba(255,255,255,0.2);
-      background: #FFFFFF;
-      padding: 14px;
-      animation: logoFloat 3s ease-in-out infinite;
       display: block;
+      background: #FFFFFF;
+      padding: 12px;
+      box-shadow:
+        0 18px 50px rgba(79, 70, 229, 0.35),
+        0 0 0 3px rgba(255,255,255,0.12);
+      animation: logoFloat 3s ease-in-out infinite;
+      will-change: transform;
     }
 
     @keyframes logoFloat {
       0%, 100% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-10px) rotate(2deg); }
+      50% { transform: translateY(-8px) rotate(2deg); }
     }
 
     .splash-title {
-      font-family: var(--font);
-      font-size: 36px;
+      font-size: 34px;
       font-weight: 900;
-      color: #FFFFFF;
       letter-spacing: -1px;
+      color: #FFFFFF;
       margin-bottom: 8px;
       line-height: 1.1;
     }
@@ -262,29 +165,21 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      background-size: 200% 200%;
-      animation: gradientShift 3s ease infinite;
-    }
-
-    @keyframes gradientShift {
-      0%, 100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
     }
 
     .splash-subtitle {
-      font-family: var(--font);
       font-size: 13px;
       font-weight: 500;
-      color: rgba(255,255,255,0.6);
-      margin-bottom: 36px;
-      letter-spacing: 0.5px;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 28px;
+      letter-spacing: 0.3px;
     }
 
     .progress-circle-wrapper {
       position: relative;
       width: 80px;
       height: 80px;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
 
     .progress-circle {
@@ -295,7 +190,7 @@
 
     .progress-circle-track {
       fill: none;
-      stroke: rgba(255,255,255,0.1);
+      stroke: rgba(255,255,255,0.12);
       stroke-width: 6;
     }
 
@@ -306,34 +201,31 @@
       stroke-linecap: round;
       stroke-dasharray: 226;
       stroke-dashoffset: 226;
-      transition: stroke-dashoffset 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      filter: drop-shadow(0 0 8px rgba(124, 58, 237, 0.8));
+      transition: stroke-dashoffset 0.35s ease;
     }
 
     .progress-percent {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-family: var(--font);
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: 18px;
       font-weight: 800;
       color: #FFFFFF;
-      letter-spacing: -0.5px;
     }
 
     .progress-percent::after {
       content: '%';
       font-size: 11px;
-      opacity: 0.6;
       margin-left: 1px;
+      opacity: 0.7;
     }
 
     .loading-text {
-      font-family: var(--font);
       font-size: 13px;
       font-weight: 500;
-      color: rgba(255,255,255,0.7);
+      color: rgba(255,255,255,0.75);
       letter-spacing: 0.3px;
       min-height: 20px;
       display: flex;
@@ -347,42 +239,36 @@
       height: 6px;
       border-radius: 50%;
       background: #10B981;
-      box-shadow: 0 0 12px #10B981;
-      animation: pulseDot 1.5s ease-in-out infinite;
+      animation: pulseDot 1.2s ease-in-out infinite;
     }
 
     @keyframes pulseDot {
       0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.3; transform: scale(0.7); }
+      50% { opacity: 0.5; transform: scale(0.7); }
     }
 
     .splash-footer {
-      font-family: var(--font);
-      font-size: 11px;
-      font-weight: 500;
-      color: rgba(255,255,255,0.4);
-      margin-top: 40px;
-      letter-spacing: 0.5px;
-      text-align: center;
-      width: 100%;
       position: absolute;
       bottom: 30px;
-      left: 0; right: 0;
-      z-index: 10;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.45);
     }
 
     .splash-footer .heart {
       color: #EC4899;
       display: inline-block;
       animation: heartBeat 1.2s ease-in-out infinite;
-      filter: drop-shadow(0 0 8px rgba(236, 72, 153, 0.8));
     }
 
     @keyframes heartBeat {
       0%, 100% { transform: scale(1); }
-      25% { transform: scale(1.3); }
+      25% { transform: scale(1.18); }
       50% { transform: scale(1); }
-      75% { transform: scale(1.15); }
+      75% { transform: scale(1.1); }
     }
 
     .splash-footer .developer {
@@ -394,34 +280,25 @@
       letter-spacing: 0.8px;
     }
 
-    /* ============================================================
-       IFRAME
-       ============================================================ */
     #appIframe {
+      position: absolute;
+      inset: 0;
       width: 100%;
       height: 100%;
-      min-height: 100vh;
-      min-height: 100dvh;
       border: none;
-      display: block;
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
       background: #F1F5F9;
-      z-index: 1;
+      display: block;
       opacity: 0;
-      transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: opacity 0.8s ease;
       overflow: auto;
       -webkit-overflow-scrolling: touch;
-      will-change: opacity;
+      z-index: 1;
     }
 
     #appIframe.loaded {
       opacity: 1;
     }
 
-    /* ============================================================
-       INSTALL BUTTON
-       ============================================================ */
     #btnInstall {
       display: none;
       position: fixed;
@@ -438,37 +315,18 @@
       font-size: 14px;
       font-weight: 700;
       cursor: pointer;
-      box-shadow: 
-        0 12px 40px rgba(79, 70, 229, 0.5),
-        0 0 0 1px rgba(255,255,255,0.1),
-        inset 0 1px 0 rgba(255,255,255,0.2);
-      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+      box-shadow:
+        0 12px 32px rgba(79, 70, 229, 0.45),
+        0 0 0 1px rgba(255,255,255,0.08);
       letter-spacing: 0.3px;
-      align-items: center;
-      gap: 8px;
       white-space: nowrap;
       animation: btnFloat 3s ease-in-out infinite;
     }
 
     #btnInstall.show {
       display: flex;
-    }
-
-    #btnInstall::before {
-      content: '';
-      position: absolute;
-      inset: -4px;
-      border-radius: 999px;
-      background: var(--gradient-1);
-      opacity: 0.4;
-      filter: blur(12px);
-      z-index: -1;
-      animation: btnGlow 2s ease-in-out infinite;
-    }
-
-    @keyframes btnGlow {
-      0%, 100% { opacity: 0.3; transform: scale(1); }
-      50% { opacity: 0.6; transform: scale(1.05); }
+      align-items: center;
+      gap: 8px;
     }
 
     @keyframes btnFloat {
@@ -476,46 +334,48 @@
       50% { transform: translateX(-50%) translateY(-4px); }
     }
 
-    #btnInstall:active {
-      transform: translateX(-50%) scale(0.95);
-    }
-
-    /* ============================================================
-       RESPONSIVE
-       ============================================================ */
     @media (max-width: 480px) {
-      .splash-logo { width: 100px; height: 100px; padding: 12px; border-radius: 26px; }
-      .splash-title { font-size: 30px; }
-      .splash-subtitle { font-size: 12px; }
+      .splash-logo {
+        width: 100px;
+        height: 100px;
+      }
+      .splash-title {
+        font-size: 30px;
+      }
+      .splash-subtitle {
+        font-size: 12px;
+      }
       .progress-circle-wrapper,
-      .progress-circle { width: 70px; height: 70px; }
-      .progress-circle-progress { stroke-dasharray: 198; stroke-dashoffset: 198; }
-      .progress-percent { font-size: 16px; }
-      .splash-footer { font-size: 10px; bottom: 24px; }
+      .progress-circle {
+        width: 70px;
+        height: 70px;
+      }
+      .progress-percent {
+        font-size: 16px;
+      }
+      .splash-footer {
+        font-size: 10px;
+        bottom: 24px;
+      }
     }
 
     @media (min-width: 769px) {
       body {
         background: linear-gradient(135deg, #0A0E1A 0%, #1E1B4B 50%, #312E81 100%);
         padding: 24px;
-        align-items: center;
-        justify-content: center;
-        position: relative;
       }
+
       #appIframe {
         max-width: 480px;
         border-radius: 28px;
-        box-shadow: 
+        box-shadow:
           0 40px 120px rgba(0,0,0,0.4),
-          0 0 0 1px rgba(255,255,255,0.05),
-          inset 0 1px 0 rgba(255,255,255,0.1);
+          0 0 0 1px rgba(255,255,255,0.05);
         position: relative;
         height: 90vh;
         min-height: 600px;
         max-height: 95vh;
       }
-      .splash-logo { width: 140px; height: 140px; padding: 18px; }
-      .splash-title { font-size: 42px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -532,9 +392,8 @@
 </head>
 <body>
 
-  <!-- SPLASH SCREEN -->
   <div id="splash-screen">
-    <svg width="0" height="0" style="position:absolute;">
+    <svg width="0" height="0" style="position:absolute;pointer-events:none;">
       <defs>
         <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stop-color="#4F46E5"/>
@@ -550,7 +409,7 @@
       </div>
       <div class="splash-title">eBukit<span>Sultan</span></div>
       <div class="splash-subtitle">Amanah Dalam Kelola · Transparan Dalam Data</div>
-      
+
       <div class="progress-circle-wrapper">
         <svg class="progress-circle" viewBox="0 0 80 80">
           <circle class="progress-circle-track" cx="40" cy="40" r="36"></circle>
@@ -558,17 +417,16 @@
         </svg>
         <div class="progress-percent" id="progressPercent">0</div>
       </div>
-      
+
       <div class="loading-text" id="loadingText">Memuat aplikasi</div>
-      
+
       <div class="splash-footer">
         Developed With <span class="heart">❤️</span> By <span class="developer">AF-AHFZB2NO2</span>
       </div>
     </div>
   </div>
 
-  <!-- IFRAME -->
-  <iframe 
+  <iframe
       id="appIframe"
       src="https://script.google.com/macros/s/AKfycbzZ32DozSeyMZ2U8fZo9DgeKHoyedL5dc-SpPhiGagHFKtLHEEenw88pOKWpTu3Nu1M1g/exec"
       allowfullscreen="true"
@@ -576,28 +434,22 @@
       scrolling="yes"
       allow="cross-origin-isolated; storage-access; clipboard-write; camera; microphone; geolocation"
       referrerpolicy="no-referrer-when-downgrade"
-      sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads allow-storage-access-by-user-activation allow-top-navigation allow-top-navigation-by-user-activation allow-popups-to-escape-sandbox allow-presentation allow-orientation-lock"
+      sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads allow-storage-access-by-user-activation allow-top-navigation allow-top-navigation-by-user-activation"
       style="width:100%; height:100%; border:none;"
       title="eBukitSultan App"
   ></iframe>
 
-  <!-- INSTALL BUTTON -->
   <button id="btnInstall" onclick="installApp()">
     <span>📲</span>
     <span>Install Aplikasi</span>
   </button>
 
   <script>
-    // ============================================================
-    // SPLASH SCREEN — MODERN VERSION (DURASI CUSTOM)
-    // ⏱️ UBAH DURASI DI 3 BARIS PALING ATAS
-    // ============================================================
     (function() {
-      // ⏱️ KONFIGURASI DURASI — Ubah di sini
-      var SPLASH_MIN_DURATION = 8000;      // Minimum 4 detik (WAJIB tampil)
-      var SPLASH_DELAY_AFTER_LOAD = 3000;  // Delay 1.5 detik setelah iframe load
-      var SPLASH_MAX_DURATION = 15000;     // Maximum 15 detik (force hide)
-      var SPLASH_MSG_INTERVAL = 2000;      // Ganti pesan setiap 2 detik
+      var SPLASH_MIN_DURATION = 5000;
+      var SPLASH_DELAY_AFTER_LOAD = 1500;
+      var SPLASH_MAX_DURATION = 10000;
+      var SPLASH_MSG_INTERVAL = 2500;
 
       var splashScreen = document.getElementById('splash-screen');
       var iframe = document.getElementById('appIframe');
@@ -611,7 +463,7 @@
       var progressInterval = null;
       var messageInterval = null;
       var currentProgress = 0;
-      var CIRCLE_LENGTH = 226; // 2 * PI * 36
+      var CIRCLE_LENGTH = 226;
 
       function updateProgress(percent) {
         currentProgress = Math.min(percent, 100);
@@ -626,66 +478,78 @@
 
       function hideSplash(force) {
         if (splashHidden) return;
-        
+
         var elapsed = Date.now() - splashStartTime;
         var remaining = SPLASH_MIN_DURATION - elapsed;
-        
-        // ✅ Kalau belum mencapai minimum duration, tunda
+
         if (!force && remaining > 0) {
-          console.log('⏱️ Splash minimum belum tercapai, tunggu ' + Math.round(remaining/1000) + ' detik lagi');
-          setTimeout(function() { hideSplash(true); }, remaining);
+          setTimeout(function() {
+            hideSplash(true);
+          }, remaining);
           return;
         }
-        
+
         splashHidden = true;
-        
+
         clearInterval(messageInterval);
         clearInterval(progressInterval);
         clearTimeout(loadTimeoutId);
-        
+
         updateProgress(100);
-        if (loadingText) loadingText.textContent = 'Siap!';
-        
-        if (iframe) iframe.classList.add('loaded');
-        
+
+        if (loadingText) {
+          loadingText.textContent = 'Siap!';
+        }
+
+        if (iframe) {
+          iframe.classList.add('loaded');
+        }
+
         setTimeout(function() {
           splashScreen.classList.add('fade-out');
           setTimeout(function() {
             splashScreen.classList.add('hide-complete');
             splashScreen.style.display = 'none';
-          }, 600);
-        }, 300);
-        
-        console.log('✅ Splash hidden after ' + Math.round(elapsed/1000) + ' detik');
+          }, 500);
+        }, 200);
+
+        console.log('✅ Splash hidden after ' + Math.round(elapsed / 1000) + ' detik');
       }
 
       if (iframe) {
         iframe.addEventListener('load', function() {
           iframeLoaded = true;
-          console.log('✅ Iframe loaded, tunggu delay tambahan...');
-          
+          console.log('✅ Iframe loaded');
+
           clearInterval(progressInterval);
-          
-          // ✅ Set progress ke 95% dulu (belum 100%)
-          if (currentProgress < 95) updateProgress(95);
-          
-          // ✅ Tunggu SPLASH_DELAY_AFTER_LOAD sebelum hide
+
+          if (currentProgress < 95) {
+            updateProgress(95);
+          }
+
           setTimeout(function() {
             updateProgress(100);
-            if (loadingText) loadingText.textContent = 'Siap!';
-            setTimeout(hideSplash, 500);
+            if (loadingText) {
+              loadingText.textContent = 'Siap!';
+            }
+            setTimeout(function() {
+              hideSplash(true);
+            }, 300);
           }, SPLASH_DELAY_AFTER_LOAD);
         });
 
         iframe.addEventListener('error', function() {
           clearInterval(messageInterval);
           clearInterval(progressInterval);
-          if (loadingText) loadingText.textContent = 'Gagal memuat, coba refresh';
-          setTimeout(function() { hideSplash(true); }, 2000);
+          if (loadingText) {
+            loadingText.textContent = 'Gagal memuat, coba refresh';
+          }
+          setTimeout(function() {
+            hideSplash(true);
+          }, 2000);
         });
       }
 
-      // ✅ Loading messages — tampil bergantian
       var loadingMessages = [
         'Memuat aplikasi',
         'Menyiapkan data',
@@ -694,29 +558,27 @@
         'Hampir selesai',
         'Menyiapkan tampilan'
       ];
-      var messageIndex = 0;
 
+      var messageIndex = 0;
       messageInterval = setInterval(function() {
         if (splashHidden) return;
         messageIndex = (messageIndex + 1) % loadingMessages.length;
-        if (loadingText) loadingText.textContent = loadingMessages[messageIndex];
+        if (loadingText) {
+          loadingText.textContent = loadingMessages[messageIndex];
+        }
       }, SPLASH_MSG_INTERVAL);
 
-      // ✅ Progress animation — smooth sampai 90%
       progressInterval = setInterval(function() {
-        if (splashHidden) { clearInterval(progressInterval); return; }
-        
-        // Hitung progress berdasarkan waktu (lebih smooth)
+        if (splashHidden) return;
+
         var elapsed = Date.now() - splashStartTime;
         var targetProgress = Math.min(90, (elapsed / SPLASH_MIN_DURATION) * 90);
-        
-        // Hanya update kalau lebih besar dari current
+
         if (targetProgress > currentProgress) {
           updateProgress(targetProgress);
         }
       }, 200);
 
-      // ✅ Force hide setelah MAX duration
       loadTimeoutId = setTimeout(function() {
         if (!splashHidden) {
           console.warn('⏰ Splash timeout, force hide');
@@ -728,9 +590,6 @@
       window.hideSplash = hideSplash;
     })();
 
-    // ============================================================
-    // INSTALL APP
-    // ============================================================
     var deferredPrompt;
 
     window.addEventListener('beforeinstallprompt', function(e) {
@@ -755,18 +614,17 @@
       });
     }
 
-    // ============================================================
-    // CHROME ANDROID FIXES
-    // ============================================================
     setTimeout(function() {
-      var iframe = document.getElementById('appIframe');
-      if (iframe && !iframe.dataset.reloaded) {
-        iframe.dataset.reloaded = '1';
-        var originalSrc = iframe.src;
-        iframe.src = 'about:blank';
-        setTimeout(function() { iframe.src = originalSrc; }, 100);
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js', { scope: '/' })
+          .then(function(registration) {
+            console.log('✅ Service worker registered:', registration);
+          })
+          .catch(function(error) {
+            console.error('❌ Service worker registration failed:', error);
+          });
       }
-    }, 500);
+    }, 300);
 
     if (document.requestStorageAccess) {
       document.requestStorageAccess().then(function() {
@@ -776,41 +634,13 @@
       });
     }
 
-    var iframeLoadAttempts = 0;
-    var maxIframeAttempts = 3;
-    
-    function checkIframeLoaded() {
-      iframeLoadAttempts++;
-      var iframe = document.getElementById('appIframe');
-      if (!iframe) return;
-      
-      try {
-        var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-        if (!iframeDoc || iframeDoc.body.innerHTML.length < 100) {
-          if (iframeLoadAttempts < maxIframeAttempts) {
-            var src = iframe.src;
-            iframe.src = 'about:blank';
-            setTimeout(function() { iframe.src = src; }, 300);
-            setTimeout(checkIframeLoaded, 3000);
-          }
-        }
-      } catch(e) {
-        // Cross-origin = normal
-      }
-    }
-    
-    setTimeout(checkIframeLoaded, 8000);
-    
-    window.addEventListener('popstate', function(e) {
-      var iframe = document.getElementById('appIframe');
-      if (iframe && iframe.contentWindow) {
-        try {
-          iframe.contentWindow.history.back();
-          history.pushState(null, '', window.location.href);
-        } catch(e) {}
+    window.addEventListener('popstate', function() {
+      if (window.history.length > 1) {
+        window.history.back();
       }
     });
-    history.pushState(null, '', window.location.href);
+
+    console.log('✅ eBukitSultan app initialized');
   </script>
 </body>
 </html>
