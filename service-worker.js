@@ -1,14 +1,13 @@
 // ============================================================
 // SERVICE WORKER - eBukitSultan
-// Versi: 1.0.1
+// Versi: 1.0.2
+// Optimized for performance and stability
 // ============================================================
 
-const CACHE_NAME = 'ebukitsultan-v1.0.1';
+const CACHE_NAME = 'ebukitsultan-v1.0.2';
 const OFFLINE_URL = '/offline.html';
 
-// ============================================================
-// DAFTAR ASET YANG DI-CACHE
-// ============================================================
+// Aset kritis saja, agar install ringan dan tidak memblok
 const ASSETS = [
   '/',
   '/index.html',
@@ -21,33 +20,20 @@ const ASSETS = [
   '/icons/icon-152.png',
   '/icons/icon-192.png',
   '/icons/icon-384.png',
-  '/icons/icon-512.png',
-  '/icons/splash-750x1334.png',
-  '/icons/splash-1242x2208.png',
-  '/icons/splash-1125x2436.png',
-  '/icons/splash-828x1792.png',
-  '/icons/splash-1170x2532.png',
-  '/icons/splash-1284x2778.png',
-  '/icons/splash-1179x2556.png',
-  '/icons/splash-1536x2048.png',
-  '/icons/splash-1668x2388.png',
-  '/icons/splash-2048x2732.png'
+  '/icons/icon-512.png'
 ];
 
-// ============================================================
-// INSTALL EVENT
-// ============================================================
 self.addEventListener('install', function(event) {
   console.log('🔄 Service Worker: Install');
 
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(function(cache) {
-        console.log('📦 Service Worker: Caching assets...');
+        console.log('📦 Service Worker: Caching critical assets...');
         return cache.addAll(ASSETS);
       })
       .then(function() {
-        console.log('✅ Service Worker: Assets cached successfully');
+        console.log('✅ Service Worker: Critical assets cached');
         return self.skipWaiting();
       })
       .catch(function(error) {
@@ -56,9 +42,6 @@ self.addEventListener('install', function(event) {
   );
 });
 
-// ============================================================
-// ACTIVATE EVENT
-// ============================================================
 self.addEventListener('activate', function(event) {
   console.log('🔄 Service Worker: Activate');
 
@@ -70,6 +53,7 @@ self.addEventListener('activate', function(event) {
             console.log('🗑️ Service Worker: Deleting old cache:', cacheName);
             return caches.delete(cacheName);
           }
+          return Promise.resolve();
         })
       );
     }).then(function() {
@@ -79,102 +63,83 @@ self.addEventListener('activate', function(event) {
   );
 });
 
-// ============================================================
-// FETCH EVENT
-// ============================================================
 self.addEventListener('fetch', function(event) {
-  // ============================================================
-  // 1. HANDLE NAVIGATION (Halaman HTML)
-  // ============================================================
+  // NAVIGASI: prioritize network, fallback offline
   if (event.request.mode === 'navigate') {
     event.respondWith(
       fetch(event.request)
         .then(function(response) {
           if (response && response.status === 200) {
-            var responseClone = response.clone();
+            const cloned = response.clone();
             caches.open(CACHE_NAME).then(function(cache) {
-              cache.put(event.request, responseClone);
+              cache.put(event.request, cloned);
             });
           }
           return response;
         })
         .catch(function() {
-          console.log('📡 Service Worker: Offline, showing offline page');
-          return caches.match(OFFLINE_URL);
+          console.log('📡 Service Worker: Offline fallback');
+          return caches.match(OFFLINE_URL) || Response.error();
         })
     );
     return;
   }
 
-  // ============================================================
-  // 2. HANDLE API REQUESTS
-  // ============================================================
+  // API / data requests: network first, then cache
   if (event.request.url.includes('/api/')) {
     event.respondWith(
       fetch(event.request)
         .then(function(response) {
           if (response && response.status === 200) {
-            var responseClone = response.clone();
+            const cloned = response.clone();
             caches.open(CACHE_NAME).then(function(cache) {
-              cache.put(event.request, responseClone);
+              cache.put(event.request, cloned);
             });
           }
           return response;
         })
         .catch(function() {
-          return caches.match(event.request);
+          return caches.match(event.request) || Response.error();
         })
     );
     return;
   }
 
-  // ============================================================
-  // 3. HANDLE STATIC ASSETS (CSS, JS, Images, etc)
-  // ============================================================
+  // Aset statis: cache-first, fallback network
   event.respondWith(
-    caches.match(event.request)
-      .then(function(response) {
-        if (response) {
-          return response;
-        }
+    caches.match(event.request).then(function(cached) {
+      if (cached) {
+        return cached;
+      }
 
-        return fetch(event.request)
-          .then(function(networkResponse) {
-            if (!networkResponse || networkResponse.status !== 200) {
-              return networkResponse;
-            }
-
-            var responseClone = networkResponse.clone();
-            caches.open(CACHE_NAME).then(function(cache) {
-              cache.put(event.request, responseClone);
-            });
-
+      return fetch(event.request)
+        .then(function(networkResponse) {
+          if (!networkResponse || networkResponse.status !== 200) {
             return networkResponse;
-          })
-          .catch(function() {
-            // Fallback untuk gambar
-            if (event.request.url.match(/\.(png|jpg|jpeg|gif|svg|webp|ico)$/)) {
-              return caches.match('/icons/icon-192.png');
-            }
-            // Fallback untuk font
-            if (event.request.url.match(/\.(woff|woff2|ttf|eot)$/)) {
-              return new Response(null, { status: 404 });
-            }
-            return new Response(null, { status: 404 });
+          }
+
+          const cloned = networkResponse.clone();
+          caches.open(CACHE_NAME).then(function(cache) {
+            cache.put(event.request, cloned);
           });
-      })
+
+          return networkResponse;
+        })
+        .catch(function() {
+          if (event.request.url.match(/\.(png|jpg|jpeg|gif|svg|webp|ico)$/)) {
+            return caches.match('/icons/icon-192.png') || Response.error();
+          }
+          return Response.error();
+        });
+    })
   );
 });
 
-// ============================================================
-// MESSAGE EVENT
-// ============================================================
 self.addEventListener('message', function(event) {
   if (event.data && event.data.action === 'skipWaiting') {
     self.skipWaiting();
   }
-  
-  // Untuk update konten
+
   if (event.data && event.data.action === 'updateCache') {
     event.waitUntil(
       caches.open(CACHE_NAME).then(function(cache) {
@@ -184,16 +149,13 @@ self.addEventListener('message', function(event) {
   }
 });
 
-// ============================================================
-// PUSH NOTIFICATION
-// ============================================================
 self.addEventListener('push', function(event) {
   if (!event.data) return;
 
   try {
-    var data = event.data.json();
-    var title = data.title || 'eBukitSultan';
-    var options = {
+    const data = event.data.json();
+    const title = data.title || 'eBukitSultan';
+    const options = {
       body: data.body || 'Ada notifikasi baru',
       icon: '/icons/icon-192.png',
       badge: '/icons/icon-72.png',
@@ -211,13 +173,10 @@ self.addEventListener('push', function(event) {
   }
 });
 
-// ============================================================
-// NOTIFICATION CLICK
-// ============================================================
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
 
-  var urlToOpen = event.notification.data && event.notification.data.url
+  const urlToOpen = event.notification.data && event.notification.data.url
     ? event.notification.data.url
     : '/';
 
@@ -226,23 +185,21 @@ self.addEventListener('notificationclick', function(event) {
       type: 'window',
       includeUncontrolled: true
     }).then(function(windowClients) {
-      for (var i = 0; i < windowClients.length; i++) {
-        var client = windowClients[i];
+      for (let i = 0; i < windowClients.length; i++) {
+        const client = windowClients[i];
         if (client.url === urlToOpen && 'focus' in client) {
           return client.focus();
         }
       }
+
       if (clients.openWindow) {
         return clients.openWindow(urlToOpen);
       }
+      return null;
     })
   );
 });
 
-// ============================================================
-// LOGGING
-// ============================================================
 console.log('✅ Service Worker: eBukitSultan loaded');
 console.log('📦 Cache Name:', CACHE_NAME);
 console.log('📡 Offline URL:', OFFLINE_URL);
-console.log('📁 Assets Count:', ASSETS.length);
