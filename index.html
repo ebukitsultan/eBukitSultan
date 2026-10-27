@@ -8,18 +8,25 @@
   <meta http-equiv="Expires" content="0">
   <title>eBukitSultan - Warga Blok B</title>
 
-  <link rel="manifest" href="manifest.webmanifest">
+  <!-- ✅ FIX: Favicon (hilangkan 404) -->
+  <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1t8_cVCIU7gPwWKpLTStCd99soJBKkrMc">
+  <link rel="icon" type="image/png" sizes="192x192" href="https://lh3.googleusercontent.com/d/1t8_cVCIU7gPwWKpLTStCd99soJBKkrMc">
+  <link rel="icon" type="image/png" sizes="512x512" href="https://lh3.googleusercontent.com/d/1t8_cVCIU7gPwWKpLTStCd99soJBKkrMc">
+
+  <!-- ❌ DIHAPUS: <link rel="manifest" href="manifest.webmanifest"> -->
+
   <meta name="theme-color" content="#4F46E5">
   <meta name="msapplication-TileColor" content="#4F46E5">
-  <meta name="msapplication-TileImage" content="icons/icon-192.png">
+  <meta name="msapplication-TileImage" content="https://lh3.googleusercontent.com/d/1t8_cVCIU7gPwWKpLTStCd99soJBKkrMc">
   <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="eBukitSultan">
   <meta name="description" content="Administrasi Warga Blok B Bukit Sultan">
 
-  <link rel="apple-touch-icon" href="icons/icon-192.png">
-  <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="https://lh3.googleusercontent.com/d/1t8_cVCIU7gPwWKpLTStCd99soJBKkrMc">
+  <link rel="apple-touch-icon" sizes="152x152" href="https://lh3.googleusercontent.com/d/1t8_cVCIU7gPwWKpLTStCd99soJBKkrMc">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://lh3.googleusercontent.com/d/1t8_cVCIU7gPwWKpLTStCd99soJBKkrMc">
 
   <link rel="apple-touch-startup-image" href="icons/splash-750x1334.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)">
   <link rel="apple-touch-startup-image" href="icons/splash-1125x2436.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)">
@@ -405,7 +412,7 @@
 
     <div class="splash-content">
       <div class="splash-logo-wrapper">
-        <img src="icons/icon-512.png" class="splash-logo" alt="eBukitSultan Logo" id="splashLogo" onerror="this.src='https://lh3.googleusercontent.com/d/1t8_cVCIU7gPwWKpLTStCd99soJBKkrMc'">
+        <img src="https://lh3.googleusercontent.com/d/1t8_cVCIU7gPwWKpLTStCd99soJBKkrMc" class="splash-logo" alt="eBukitSultan Logo" id="splashLogo">
       </div>
       <div class="splash-title">eBukit<span>Sultan</span></div>
       <div class="splash-subtitle">Amanah Dalam Kelola · Transparan Dalam Data</div>
@@ -614,17 +621,7 @@
       });
     }
 
-    setTimeout(function() {
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/service-worker.js', { scope: '/' })
-          .then(function(registration) {
-            console.log('✅ Service worker registered:', registration);
-          })
-          .catch(function(error) {
-            console.error('❌ Service worker registration failed:', error);
-          });
-      }
-    }, 300);
+    /* ❌ SERVICE WORKER REGISTRATION DIHAPUS — biar tidak ada error 404 */
 
     if (document.requestStorageAccess) {
       document.requestStorageAccess().then(function() {
