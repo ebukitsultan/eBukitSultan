@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>eBukitSultan - Offline</title>
 
+  <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1t8_cVCIU7gPwWKpLTStCd99soJBKkrMc">
+  <meta name="theme-color" content="#4F46E5">
+
   <style>
     * {
       margin: 0;
@@ -141,7 +144,6 @@
       75% { transform: scale(1.05); }
     }
 
-    /* Desktop */
     @media (min-width: 481px) {
       .card {
         padding: 48px 40px;
@@ -155,7 +157,6 @@
       }
     }
 
-    /* HP Portrait */
     @media (max-width: 480px) {
       .card {
         padding: 32px 24px;
@@ -172,7 +173,6 @@
       }
     }
 
-    /* HP Landscape */
     @media (orientation: landscape) and (max-height: 500px) {
       .card {
         padding: 20px 24px;
@@ -206,14 +206,12 @@
       }
     }
 
-    /* Chrome HP Fix */
     @supports (-webkit-touch-callout: none) {
       body {
         min-height: -webkit-fill-available;
       }
     }
 
-    /* Safe Area iPhone */
     @supports (padding: max(0px)) {
       body {
         padding-left: max(20px, env(safe-area-inset-left));
@@ -223,7 +221,6 @@
       }
     }
 
-    /* Firefox */
     @-moz-document url-prefix() {
       body {
         min-height: 100vh;
@@ -234,33 +231,27 @@
 
 <body>
   <div class="card">
-    <!-- Icon -->
     <span class="icon">📡</span>
 
-    <!-- Title -->
     <div class="title">eBukit<span>Sultan</span></div>
     <div class="subtitle">Amanah Dalam Kelola Transparan Dalam Data</div>
 
     <div class="divider"></div>
 
-    <!-- Message -->
     <p class="message">
       <strong>Tidak Ada Koneksi Internet</strong><br>
       Silakan sambungkan internet lalu buka kembali eBukitSultan.
     </p>
 
-    <!-- Button -->
-    <button class="btn" onclick="handleReload()">
+    <button class="btn" id="btnReload" onclick="handleReload()">
       <span class="icon-btn">🔄</span> Coba Lagi
     </button>
 
-    <!-- Status -->
     <div class="status-bar">
       <span class="status-dot" id="statusDot"></span>
       <span id="statusText">Offline</span>
     </div>
 
-    <!-- Footer -->
     <div class="footer">
       Developed With <span class="heart">❤️</span> By AF-AHFZB2NO2
     </div>
@@ -272,23 +263,22 @@
     // ============================================================
     var statusDot = document.getElementById('statusDot');
     var statusText = document.getElementById('statusText');
+    var btnReload = document.getElementById('btnReload');
 
     function updateStatus(online) {
       if (online) {
         statusDot.className = 'status-dot online';
         statusText.textContent = 'Online';
-        document.querySelector('.btn').innerHTML = '<span class="icon-btn">✅</span> Reload Sekarang';
+        btnReload.innerHTML = '<span class="icon-btn">✅</span> Reload Sekarang';
       } else {
         statusDot.className = 'status-dot';
         statusText.textContent = 'Offline';
-        document.querySelector('.btn').innerHTML = '<span class="icon-btn">🔄</span> Coba Lagi';
+        btnReload.innerHTML = '<span class="icon-btn">🔄</span> Coba Lagi';
       }
     }
 
-    // Status awal
     updateStatus(navigator.onLine);
 
-    // Listener perubahan koneksi
     window.addEventListener('online', function() {
       updateStatus(true);
     });
@@ -310,18 +300,7 @@
       }
     }
 
-    // ============================================================
-    // REGISTER SERVICE WORKER
-    // ============================================================
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/service-worker.js')
-            .then(registration => {
-                console.log('✅ Service Worker registered:', registration);
-            })
-            .catch(error => {
-                console.log('❌ Service Worker registration failed:', error);
-            });
-    }
+    /* ❌ SERVICE WORKER REGISTRATION DIHAPUS — biar tidak ada error 404 */
 
     // ============================================================
     // FULLSCREEN (Untuk PWA)
@@ -338,12 +317,10 @@
       }
     }
 
-    // Coba fullscreen saat load
     document.addEventListener('DOMContentLoaded', function() {
       setTimeout(requestFullscreen, 500);
     });
 
-    // Fullscreen saat klik/tap
     document.addEventListener('click', function() {
       if (!document.fullscreenElement && !document.webkitFullscreenElement) {
         requestFullscreen();
