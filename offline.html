@@ -258,9 +258,6 @@
   </div>
 
   <script>
-    // ============================================================
-    // STATUS KONEKSI
-    // ============================================================
     var statusDot = document.getElementById('statusDot');
     var statusText = document.getElementById('statusText');
     var btnReload = document.getElementById('btnReload');
@@ -287,9 +284,6 @@
       updateStatus(false);
     });
 
-    // ============================================================
-    // HANDLE RELOAD
-    // ============================================================
     function handleReload() {
       if (navigator.onLine) {
         window.location.reload();
@@ -300,11 +294,6 @@
       }
     }
 
-    /* ❌ SERVICE WORKER REGISTRATION DIHAPUS — biar tidak ada error 404 */
-
-    // ============================================================
-    // FULLSCREEN (Untuk PWA)
-    // ============================================================
     function requestFullscreen() {
       try {
         if (document.documentElement.requestFullscreen) {
